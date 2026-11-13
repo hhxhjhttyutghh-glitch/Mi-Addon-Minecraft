@@ -1,0 +1,447 @@
+=== INICIO PARTE 4 DE 4 (ÚLTIMA PARTE - YA TIENES TODO EL CÓDIGO COMPLETO) ===
+                    if (sArriba.item === 'madera_procesada' && sAbajo.item === 'madera_procesada' && sArriba.cantidad > 0 && sAbajo.cantidad > 0) {
+                        let minC = Math.min(sArriba.cantidad, sAbajo.cantidad);
+                        let limpio = true;
+                        for (let i = 0; i < gridSlots.length; i++) {
+                            if (i !== idxArriba && i !== idxAbajo && gridSlots[i].item !== null) { limpio = false; break; }
+                        }
+                        if (limpio) {
+                            return { item: 'palo', cantidadPorCraft: 4, maxCrafts: minC, tipoGrid: 'palo_vertical', indices: [idxArriba, idxAbajo] };
+                        }
+                    }
+                }
+            }
+
+            // 2. Crafteo de Mesa de Trabajo (Cuadrado 2x2)
+            if (ancho === 2 || ancho === 3) {
+                for (let r = 0; r <= alto - 2; r++) {
+                    for (let c = 0; c <= ancho - 2; c++) {
+                        let idx0 = r * ancho + c;
+                        let idx1 = r * ancho + (c + 1);
+                        let idx2 = (r + 1) * ancho + c;
+                        let idx3 = (r + 1) * ancho + (c + 1);
+
+                        let s0 = gridSlots[idx0], s1 = gridSlots[idx1], s2 = gridSlots[idx2], s3 = gridSlots[idx3];
+                        if (s0.item === 'madera_procesada' && s1.item === 'madera_procesada' && s2.item === 'madera_procesada' && s3.item === 'madera_procesada') {
+                            let minC = Math.min(s0.cantidad, s1.cantidad, s2.cantidad, s3.cantidad);
+                            if (minC > 0) {
+                                let limpio = true;
+                                for (let i = 0; i < gridSlots.length; i++) {
+                                    if (i !== idx0 && i !== idx1 && i !== idx2 && i !== idx3 && gridSlots[i].item !== null) { limpio = false; break; }
+                                }
+                                if (limpio) {
+                                    return { item: 'mesa_trabajo', cantidadPorCraft: 1, maxCrafts: minC, tipoGrid: 'cuadrado2x2', indices: [idx0, idx1, idx2, idx3] };
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // 3. Crafteo de Hacha (Solo en mesa 3x3)
+            if (ancho === 3) {
+                let indicesHacha = null;
+                if (gridSlots[0].item === 'madera_procesada' && gridSlots[1].item === 'madera_procesada' && gridSlots[3].item === 'madera_procesada' &&
+                    gridSlots[4].item === 'palo' && gridSlots[7].item === 'palo') {
+                    indicesHacha = [0, 1, 3, 4, 7];
+                } else if (gridSlots[1].item === 'madera_procesada' && gridSlots[2].item === 'madera_procesada' && gridSlots[5].item === 'madera_procesada' &&
+                         gridSlots[4].item === 'palo' && gridSlots[7].item === 'palo') {
+                    indicesHacha = [1, 2, 5, 4, 7];
+                } else if (gridSlots[0].item === 'madera_procesada' && gridSlots[1].item === 'madera_procesada' && gridSlots[2].item === 'madera_procesada' &&
+                         gridSlots[4].item === 'palo' && gridSlots[7].item === 'palo') {
+                    indicesHacha = [0, 1, 2, 4, 7];
+                }
+
+                if (indicesHacha !== null) {
+                    let minC = Math.min(...indicesHacha.map(idx => gridSlots[idx].cantidad));
+                    let limpio = true;
+                    for (let i = 0; i < gridSlots.length; i++) {
+                        if (!indicesHacha.includes(i) && gridSlots[i].item !== null) { limpio = false; break; }
+                    }
+                    if (limpio && minC > 0) {
+                        return { item: 'acha', cantidadPorCraft: 1, maxCrafts: minC, tipoGrid: 'hacha', indices: indicesHacha };
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        function calcularResultadoCrafting() { return evaluarGridExacto(craftingGrid, 2); }
+
+        function recolectarCrafting(todo) {
+            let resultado = calcularResultadoCrafting();
+            if (resultado !== null) {
+                if (itemSeleccionado !== null) return;
+                let cantidadACraftear = todo ? resultado.maxCrafts : 1;
+                let totalProducido = resultado.cantidadPorCraft * cantidadACraftear;
+
+                if (resultado.item === 'acha' && totalProducido > 1) {
+                    totalProducido = 1;
+                    cantidadACraftear = 1;
+                }
+
+                itemSeleccionado = { item: resultado.item, cantidad: totalProducido };
+                let aRestar = cantidadACraftear;
+                resultado.indices.forEach(idx => {
+                    craftingGrid[idx].cantidad -= aRestar;
+                    if (craftingGrid[idx].cantidad <= 0) { craftingGrid[idx].item = null; craftingGrid[idx].cantidad = 0; }
+                });
+                actualizarInventariosVisuales();
+            }
+        }
+
+        function calcularResultadoWorktable() { return evaluarGridExacto(worktableGrid, 3); }
+
+        function recolectarWorktable(todo) {
+            let resultado = calcularResultadoWorktable();
+            if (resultado !== null) {
+                if (itemSeleccionado !== null) return;
+                let cantidadACraftear = todo ? resultado.maxCrafts : 1;
+                let totalProducido = resultado.cantidadPorCraft * cantidadACraftear;
+
+                if (resultado.item === 'acha' && totalProducido > 1) {
+                    totalProducido = 1;
+                    cantidadACraftear = 1;
+                }
+
+                itemSeleccionado = { item: resultado.item, cantidad: totalProducido };
+                let aRestar = cantidadACraftear;
+                resultado.indices.forEach(idx => {
+                    worktableGrid[idx].cantidad -= aRestar;
+                    if (worktableGrid[idx].cantidad <= 0) { worktableGrid[idx].item = null; worktableGrid[idx].cantidad = 0; }
+                });
+                actualizarInventariosVisuales();
+            }
+        }
+
+        function actualizarInventariosVisuales() {
+            const slotsHotbar = document.querySelectorAll('#hotbar .slot');
+            hotbar.forEach((inv, i) => {
+                if (i === slotActivo) slotsHotbar[i].classList.add('active');
+                else slotsHotbar[i].classList.remove('active');
+
+                if (inv.item && inv.cantidad > 0) slotsHotbar[i].innerHTML = `<img src="${TEXTURAS_EMBEBIDAS[inv.item] || ""}"><span>${inv.cantidad}</span>`;
+                else slotsHotbar[i].innerHTML = ``;
+            });
+
+            const cursorDiv = document.getElementById('cursorItem');
+            if (cursorDiv) {
+                if (itemSeleccionado !== null) {
+                    let itemData = null;
+                    if (itemSeleccionado.item !== undefined && itemSeleccionado.tipo === undefined) {
+                        itemData = itemSeleccionado;
+                    } else if (itemSeleccionado.tipo !== undefined) {
+                        let arr;
+                        if (itemSeleccionado.tipo === 'storage') arr = inventarioStorage;
+                        else if (itemSeleccionado.tipo === 'hotbar') arr = hotbar;
+                        else if (itemSeleccionado.tipo === 'craft') arr = craftingGrid;
+                        else if (itemSeleccionado.tipo === 'wt') arr = worktableGrid;
+                        itemData = arr ? arr[itemSeleccionado.index] : null;
+                    }
+                    if (itemData && itemData.item && itemData.cantidad > 0) {
+                        cursorDiv.style.display = 'flex';
+                        cursorDiv.innerHTML = `<img src="${TEXTURAS_EMBEBIDAS[itemData.item] || ""}"><span>${itemData.cantidad}</span>`;
+                    } else cursorDiv.style.display = 'none';
+                } else cursorDiv.style.display = 'none';
+            }
+
+            ['invGrid27', 'wtInvGrid27'].forEach(gridId => {
+                const grid27 = document.getElementById(gridId);
+                if (grid27) {
+                    grid27.innerHTML = '';
+                    inventarioStorage.forEach((inv, i) => {
+                        let div = document.createElement('div');
+                        div.className = 'inv-slot-item'; div.dataset.type = 'storage'; div.dataset.index = i;
+                        if (itemSeleccionado && itemSeleccionado.tipo === 'storage' && itemSeleccionado.index === i) div.classList.add('selected');
+                        if (inv.item && inv.cantidad > 0) div.innerHTML = `<img src="${TEXTURAS_EMBEBIDAS[inv.item] || ""}"><span>${inv.cantidad}</span>`;
+                        div.onpointerdown = () => handleSlotDown('storage', i);
+                        div.onpointerup = () => handleSlotUp('storage', i);
+                        div.onpointercancel = () => { isHolding=false; if(pressTimer) clearTimeout(pressTimer); pressTimer=null; };
+                        grid27.appendChild(div);
+                    });
+                }
+            });
+
+            ['invHotbarGrid', 'wtInvHotbarGrid'].forEach(hbId => {
+                const hotbarGridModal = document.getElementById(hbId);
+                if (hotbarGridModal) {
+                    hotbarGridModal.innerHTML = '';
+                    hotbar.forEach((inv, i) => {
+                        let div = document.createElement('div');
+                        div.className = 'inv-slot-item'; div.dataset.type = 'hotbar'; div.dataset.index = i;
+                        if (itemSeleccionado && itemSeleccionado.tipo === 'hotbar' && itemSeleccionado.index === i) div.classList.add('selected');
+                        if (i === slotActivo && hbId === 'invHotbarGrid') {
+                            div.style.border = "2px solid white"; div.style.backgroundColor = "rgba(255, 255, 255, 0.25)";
+                        } else {
+                            div.style.border = "2px solid #373737"; div.style.backgroundColor = "#8b8b8b";
+                        }
+                        if (inv.item && inv.cantidad > 0) div.innerHTML = `<img src="${TEXTURAS_EMBEBIDAS[inv.item] || ""}"><span>${inv.cantidad}</span>`;
+                        div.onpointerdown = () => handleSlotDown('hotbar', i);
+                        div.onpointerup = () => handleSlotUp('hotbar', i);
+                        div.onpointercancel = () => { isHolding=false; if(pressTimer) clearTimeout(pressTimer); pressTimer=null; };
+                        hotbarGridModal.appendChild(div);
+                    });
+                }
+            });
+
+            const craftGridDiv = document.getElementById('craftGrid');
+            if (craftGridDiv) {
+                craftGridDiv.innerHTML = '';
+                craftingGrid.forEach((slot, i) => {
+                    let div = document.createElement('div');
+                    div.className = 'craft-slot'; div.dataset.type = 'craft'; div.dataset.index = i;
+                    if (itemSeleccionado && itemSeleccionado.tipo === 'craft' && itemSeleccionado.index === i) div.classList.add('selected');
+                    if (slot.item && slot.cantidad > 0) div.innerHTML = `<img src="${TEXTURAS_EMBEBIDAS[slot.item] || ""}"><span>${slot.cantidad}</span>`;
+                    div.onpointerdown = () => handleSlotDown('craft', i);
+                    div.onpointerup = () => handleSlotUp('craft', i);
+                    div.onpointercancel = () => { isHolding=false; if(pressTimer) clearTimeout(pressTimer); pressTimer=null; };
+                    craftGridDiv.appendChild(div);
+                });
+            }
+
+            const outputDiv = document.getElementById('craftOutput');
+            if (outputDiv) {
+                outputDiv.innerHTML = '';
+                let resultado = calcularResultadoCrafting();
+                if (resultado !== null) outputDiv.innerHTML = `<img src="${TEXTURAS_EMBEBIDAS[resultado.item] || ""}"><span>${resultado.cantidadPorCraft}</span>`;
+            }
+
+            const wtGridDiv = document.getElementById('wtGrid');
+            if (wtGridDiv) {
+                wtGridDiv.innerHTML = '';
+                worktableGrid.forEach((slot, i) => {
+                    let div = document.createElement('div');
+                    div.className = 'wt-slot'; div.dataset.type = 'wt'; div.dataset.index = i;
+                    if (itemSeleccionado && itemSeleccionado.tipo === 'wt' && itemSeleccionado.index === i) div.classList.add('selected');
+                    if (slot.item && slot.cantidad > 0) div.innerHTML = `<img src="${TEXTURAS_EMBEBIDAS[slot.item] || ""}"><span>${slot.cantidad}</span>`;
+                    div.onpointerdown = () => handleSlotDown('wt', i);
+                    div.onpointerup = () => handleSlotUp('wt', i);
+                    div.onpointercancel = () => { isHolding=false; if(pressTimer) clearTimeout(pressTimer); pressTimer=null; };
+                    wtGridDiv.appendChild(div);
+                });
+            }
+
+            const wtOutputDiv = document.getElementById('wtOutput');
+            if (wtOutputDiv) {
+                wtOutputDiv.innerHTML = '';
+                let resultadoWt = calcularResultadoWorktable();
+                if (resultadoWt !== null) wtOutputDiv.innerHTML = `<img src="${TEXTURAS_EMBEBIDAS[resultadoWt.item] || ""}"><span>${resultadoWt.cantidadPorCraft}</span>`;
+            }
+
+            renderizarRecetasRapidas('invRecipesContainer', 'inv');
+            renderizarRecetasRapidas('wtRecipesContainer', 'wt');
+        }
+
+        function seleccionarSlot(indice) {
+            slotActivo = indice;
+            actualizarInventariosVisuales();
+        }
+
+        canvas.addEventListener('click', (e) => {
+            if (gameState !== 'PLAYING') return;
+            let slotActual = hotbar[slotActivo];
+
+            if (slotActual && slotActual.item === 'mesa_trabajo' && slotActual.cantidad > 0) {
+                let cameraX = player.x - (canvas.width / zoomGlobal) / 2 + player.size / 2;
+                let cameraY = player.y - (canvas.height / zoomGlobal) / 2 + player.size / 2;
+
+                let mundoX = cameraX + (e.clientX / zoomGlobal);
+                let mundoY = cameraY + (e.clientY / zoomGlobal);
+
+                let dist = Math.hypot((player.x + 20) - mundoX, (player.y + 20) - mundoY);
+                if (dist < 100) {
+                    mesasEnMundo.push({ id: Date.now(), x: mundoX - 12.5, y: mundoY - 12.5, width: 25, height: 25, hp: 8 });
+                    slotActual.cantidad--;
+                    if (slotActual.cantidad <= 0) slotActual.item = null;
+                    actualizarInventariosVisuales();
+                }
+            }
+        });
+
+        function toggleInventario() {
+            const modal = document.getElementById('invModal');
+            if (modal.style.display === 'flex') {
+                devolverGridAlInventario(craftingGrid);
+                rescatarItemCursor();
+                modal.style.display = 'none';
+                isHolding = false;
+                if(pressTimer) { clearTimeout(pressTimer); pressTimer = null; }
+            } else {
+                actualizarInventariosVisuales();
+                modal.style.display = 'flex';
+            }
+        }
+
+        function toggleWorktable() {
+            const modal = document.getElementById('worktableModal');
+            if (modal.style.display === 'flex') {
+                devolverGridAlInventario(worktableGrid);
+                rescatarItemCursor();
+                modal.style.display = 'none';
+                isHolding = false;
+                if(pressTimer) { clearTimeout(pressTimer); pressTimer = null; }
+            } else {
+                actualizarInventariosVisuales();
+                modal.style.display = 'flex';
+            }
+        }
+
+        function update() {
+            if (gameState !== 'PLAYING') return;
+
+            let nextX = player.x, nextY = player.y, moviendose = false;
+            if (keys.up) { nextY -= player.speed; ultimaDireccion = 'arriba'; moviendose = true; }
+            if (keys.down) { nextY += player.speed; ultimaDireccion = 'abajo'; moviendose = true; }
+            if (keys.left) { nextX -= player.speed; ultimaDireccion = 'izquierda'; moviendose = true; }
+            if (keys.right) { nextX += player.speed; ultimaDireccion = 'derecha'; moviendose = true; }
+
+            if (moviendose) {
+                contadorPasos += player.speed;
+                if (contadorPasos > 10) { frameAnimacion = (frameAnimacion + 1) % 4; contadorPasos = 0; }
+            } else { frameAnimacion = 0; }
+
+            let playerHitbox = { x: nextX + 14.5, y: nextY + player.size - 14, width: 10, height: 12 };
+            let colisionando = false;
+            let arbolesVisibles = getArbolesCercanos();
+
+            for (let a of arbolesVisibles) {
+                let trunkHitbox = { x: a.x + 24, y: a.y + a.height - 23, width: 15, height: 25 };
+                if (playerHitbox.x < trunkHitbox.x + trunkHitbox.width && playerHitbox.x + playerHitbox.width > trunkHitbox.x &&
+                    playerHitbox.y < trunkHitbox.y + trunkHitbox.height && playerHitbox.y + playerHitbox.height > trunkHitbox.y) {
+                    colisionando = true; break;
+                }
+            }
+
+            let hayMesaCerca = false, pX = player.x + player.size / 2, pY = player.y + player.size / 2;
+            for (let m of mesasEnMundo) {
+                if (playerHitbox.x < m.x + m.width && playerHitbox.x + playerHitbox.width > m.x &&
+                    playerHitbox.y < m.y + m.height && playerHitbox.y + playerHitbox.height > m.y) {
+                    colisionando = true;
+                }
+                if (Math.hypot(pX - (m.x + 12.5), pY - (m.y + 12.5)) < 65) hayMesaCerca = true;
+            }
+
+            const ibtn = document.getElementById("interactBtn");
+            if (ibtn) ibtn.style.display = hayMesaCerca ? "flex" : "none";
+
+            if (!colisionando) { player.x = nextX; player.y = nextY; }
+
+            let playerBox = { x: player.x + 6, y: player.y + 6, width: player.size - 12, height: player.size - 12 };
+            for (let i = itemsEnSuelo.length - 1; i >= 0; i--) {
+                let it = itemsEnSuelo[i];
+                let itemBox = { x: it.x, y: it.y, width: 20, height: 20 };
+                if (playerBox.x < itemBox.x + itemBox.width && playerBox.x + playerBox.width > itemBox.x &&
+                    playerBox.y < itemBox.y + itemBox.height && playerBox.y + playerBox.height > itemBox.y) {
+                    agregarAlInventario(it.item, it.cantidad);
+                    itemsEnSuelo.splice(i, 1);
+                }
+            }
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            if (gameState === 'PLAYING') {
+                let cameraX = player.x - (canvas.width / zoomGlobal) / 2 + player.size / 2;
+                let cameraY = player.y - (canvas.height / zoomGlobal) / 2 + player.size / 2;
+
+                ctx.save();
+                ctx.scale(zoomGlobal, zoomGlobal);
+                ctx.translate(-cameraX, -cameraY);
+
+                if (pastoImg.complete && pastoImg.naturalWidth !== 0) {
+                    let pattern = ctx.createPattern(pastoImg, "repeat");
+                    ctx.fillStyle = pattern;
+                    ctx.fillRect(cameraX - 150, cameraY - 150, (canvas.width / zoomGlobal) + 300, (canvas.height / zoomGlobal) + 300);
+                } else {
+                    ctx.fillStyle = "#2e8b57";
+                    ctx.fillRect(cameraX - 150, cameraY - 150, (canvas.width / zoomGlobal) + 300, (canvas.height / zoomGlobal) + 300);
+                }
+
+                let arbolesVisibles = getArbolesCercanos();
+                let entidades = [];
+                arbolesVisibles.forEach(a => entidades.push({ tipo: 'arbol', obj: a, y: a.y + a.height }));
+                itemsEnSuelo.forEach(it => entidades.push({ tipo: 'itemSuelo', obj: it, y: it.y + 20 }));
+                mesasEnMundo.forEach(m => entidades.push({ tipo: 'mesa', obj: m, y: m.y + m.height }));
+                entidades.push({ tipo: 'player', obj: player, y: player.y + player.size });
+
+                entidades.sort((e1, e2) => e1.y - e2.y);
+
+                entidades.forEach(ent => {
+                    if (ent.tipo === 'arbol') {
+                        let a = ent.obj;
+                        ctx.save();
+                        let anim = arbolesAnimaciones[a.key];
+                        let renderX = a.x, renderY = a.y, renderW = a.width, renderH = a.height;
+
+                        if (anim) {
+                            if (anim.shake > 0) { anim.shake--; renderX += (Math.random() - 0.5) * 6; }
+                            if (anim.breaking) {
+                                let scale = Math.max(0, anim.breakTimer / 15);
+                                renderW = a.width * scale; renderH = a.height * scale;
+                                renderX += (a.width - renderW) / 2; renderY += (a.height - renderH);
+                                ctx.globalAlpha = scale;
+                            }
+                        }
+
+                        if (arbolImg.complete && arbolImg.naturalWidth !== 0) ctx.drawImage(arbolImg, renderX, renderY, renderW, renderH);
+                        else { ctx.fillStyle = "#8B4513"; ctx.fillRect(renderX, renderY, renderW, renderH); }
+                        ctx.restore();
+                    } else if (ent.tipo === 'mesa') {
+                        let m = ent.obj; ctx.save();
+                        let imgMesa = new Image(); imgMesa.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAACOElEQVR4AexVu05bQRAdOyTKQ4kSpUiTEgXxCfmI9KnS5HtSpqRJlbRRuiRCggIJIeQKLARCRiDES+Zl2XBlmz0XZj13dpblWhgakM+dc2bnca4XQZXu+efBwMM3YH0Dffd7OUq48YOPNtD//+0LjRJEhJdz4fKjDVCj0aD5Wt0jpduHu1QGl2sHz8AAHx22zpnmMaXzoiEeUQOvXzwpjEvpQnEJYRp49+YZMTCLOaKlkRsWVatxp9kmBs6ZI1oauanV98SA1tg9ahOg86YBFKXuXJ+jJwZrMddGDaTuXJ9/Hd+kickJQuThWAywtqJpAHfNQBNzREsjJ4GlgMwdnHQIkDlw0wDumoEi5ohaYxHjw/6f4J6tpZjBMA3gcGPvlOQ9pzR6ACwEwBnQb18+ZVmIpgEsfvV88HfgOo3hEjydc1IzlzEw8P13jf4trnuk9M/pOpWBXA4eGEDyLhEY+PRxnEYJ/XJVnThy/4Qk9HlZLWeB6/7AgCxYWVoiNAGdyc+eyxrJUScxM1eTxya/1kCrW/FNZws/PJdLJPcFV6RbeXTF4iEwcNzOiEH9quecKxOJekG/thIYkAU94w1OO5ks8dzK92nMn8eINlCZ+lsnYH55i5rZGCECyAG/Ztfyc3AJnUdPM3sc9Dsjg3t1QhtwKSoUICGAs5tAtBQoegsJy0BekHV7BORiyAf6GbERUQPckBrAdTqiT+csnTRgNd1mLmagUt9ukYRbGtyfy8U+vp9nuEKz/wIAAP//rDarRQAAAAZJREFUAwBHXHBXDzdhnwAAAABJRU5ErkJggg==";
+                        if (imgMesa.complete && imgMesa.naturalWidth !== 0) ctx.drawImage(imgMesa, m.x, m.y, m.width, m.height);
+                        else { ctx.fillStyle = "#8B5A2B"; ctx.fillRect(m.x, m.y, m.width, m.height); }
+                        ctx.restore();
+                    } else if (ent.tipo === 'itemSuelo') {
+                        let it = ent.obj; ctx.save();
+                        let imgItem = IMAGENES_CACHE[it.item] || new Image();
+                        if (imgItem.complete && imgItem.naturalWidth !== 0) ctx.drawImage(imgItem, it.x, it.y, 22, 22);
+                        else { ctx.fillStyle = "#a52a2a"; ctx.fillRect(it.x, it.y, 16, 16); }
+                        ctx.restore();
+                    } else if (ent.tipo === 'player') {
+                        ctx.save();
+                        let debajoDeHojas = false;
+                        arbolesVisibles.forEach(a => {
+                            let pFeetX = player.x + player.size/2, pFeetY = player.y + player.size;
+                            if (pFeetX >= a.x + 10 && pFeetX <= a.x + a.width - 10 && pFeetY >= a.y && pFeetY <= a.y + (a.height * 0.6)) debajoDeHojas = true;
+                        });
+                        if (debajoDeHojas) ctx.globalAlpha = 0.65;
+
+                        let imgActiva = imgAbajo;
+                        if (ultimaDireccion === 'arriba') imgActiva = imgArriba;
+                        if (ultimaDireccion === 'izquierda') imgActiva = imgIzquierda;
+                        if (ultimaDireccion === 'derecha') imgActiva = imgDerecha;
+
+                        if (imgActiva.complete && imgActiva.naturalWidth !== 0) {
+                            let anchoFrame = imgActiva.naturalWidth;
+                            let altoFrame = imgActiva.naturalHeight / 4;
+                            ctx.drawImage(imgActiva, 0, frameAnimacion * altoFrame, anchoFrame, altoFrame, player.x, player.y, player.size, player.size);
+                        } else {
+                            ctx.fillStyle = "red"; ctx.fillRect(player.x, player.y, player.size, player.size);
+                        }
+                        ctx.restore();
+                    }
+                });
+
+                ctx.restore();
+            } else {
+                ctx.fillStyle = "#163821";
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+            }
+        }
+
+        function loop() {
+            update();
+            draw();
+            requestAnimationFrame(loop);
+        }
+
+        loop();
+        actualizarInventariosVisuales();
+    </script>
+</body>
+</html>
+
+=== FIN PARTE 4 DE 4 ===

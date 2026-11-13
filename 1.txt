@@ -1,0 +1,1018 @@
+=== INICIO PARTE 1 DE 4 (NO RESPONDER TODAVÍA, ESPERA LAS 4 PARTES) ===
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+    <title>Mi RPG Pixel Art</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-touch-callout: none;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            overflow: hidden;
+            width: 100vw;
+            width: 100dvw;
+            height: 100vh;
+            height: 100dvh;
+            position: relative;
+            touch-action: none;
+            font-family: sans-serif;
+        }
+
+        canvas {
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            width: 100dvw;
+            height: 100vh;
+            height: 100dvh;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+            background-color: #2e8b57;
+        }
+
+        .menu-screen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            width: 100dvw;
+            height: 100vh;
+            height: 100dvh;
+            background: rgba(15, 15, 20, 0.92);
+            z-index: 200;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            overflow-y: auto;
+        }
+
+        .menu-screen.active {
+            display: flex;
+        }
+
+        .game-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ffcc00;
+            text-shadow: 2px 2px #000;
+            margin-bottom: 15px;
+            letter-spacing: 2px;
+            text-align: center;
+        }
+
+        .menu-btn {
+            width: 260px;
+            max-width: 80vw;
+            height: 40px;
+            background: linear-gradient(to bottom, #555, #333);
+            border: 2px solid #111;
+            border-top: 2px solid #777;
+            color: #fff;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 5px 0;
+            text-shadow: 1px 1px #000;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.4);
+            border-radius: 3px;
+        }
+
+        .menu-btn:active {
+            background: linear-gradient(to bottom, #333, #444);
+        }
+
+        .menu-panel {
+            width: 94vw;
+            max-width: 580px;
+            height: 85vh;
+            height: 85dvh;
+            max-height: 380px;
+            background: #222;
+            border: 3px solid #444;
+            border-radius: 6px;
+            display: flex;
+            flex-direction: column;
+            padding: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+        }
+
+        .panel-header {
+            font-size: 14px;
+            font-weight: bold;
+            color: #fff;
+            text-align: center;
+            margin-bottom: 8px;
+            text-shadow: 1px 1px #000;
+        }
+
+        .world-list {
+            flex: 1;
+            background: #111;
+            border: 2px inset #333;
+            border-radius: 4px;
+            overflow-y: auto;
+            padding: 6px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .world-item {
+            background: #2a2a2a;
+            border: 2px solid #444;
+            padding: 6px 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            border-radius: 4px;
+            color: #fff;
+        }
+
+        .world-item.selected {
+            border-color: #ffcc00;
+            background: #333322;
+        }
+
+        .world-info span { display: block; }
+        .world-name { font-size: 12px; font-weight: bold; color: #ffcc00; }
+        .world-seed { font-size: 9px; color: #aaa; }
+
+        .panel-footer-btns {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+            gap: 6px;
+        }
+
+        .small-btn {
+            flex: 1;
+            height: 34px;
+            background: linear-gradient(to bottom, #555, #333);
+            border: 2px solid #111;
+            color: #fff;
+            font-size: 11px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-bottom: 10px;
+        }
+
+        .form-group label {
+            font-size: 10px;
+            color: #ccc;
+            font-weight: bold;
+        }
+
+        .form-group input {
+            background: #111;
+            border: 2px solid #444;
+            color: #fff;
+            padding: 6px;
+            font-size: 12px;
+            border-radius: 3px;
+            outline: none;
+        }
+
+        .option-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #2a2a2a;
+            padding: 8px;
+            border-radius: 4px;
+            margin-bottom: 6px;
+            color: #fff;
+            font-size: 11px;
+        }
+        .option-row input[type="range"] { width: 130px; }
+
+        #gameUI {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            width: 100dvw;
+            height: 100vh;
+            height: 100dvh;
+            pointer-events: none;
+            z-index: 50;
+        }
+
+        .controls-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            width: 100dvw;
+            height: 100vh;
+            height: 100dvh;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            pointer-events: none;
+        }
+
+        .btn-group {
+            pointer-events: auto;
+        }
+
+        .dpad {
+            display: grid;
+            grid-template-columns: repeat(3, 55px);
+            grid-template-rows: repeat(3, 55px);
+            gap: 3px;
+        }
+
+        .action-panel {
+            pointer-events: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn {
+            background: transparent;
+            border: none;
+            border-radius: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        #up { grid-column: 2; grid-row: 1; }
+        #left { grid-column: 1; grid-row: 2; }
+        #right { grid-column: 3; grid-row: 2; }
+        #down { grid-column: 2; grid-row: 3; }
+
+        .dpad-btn {
+            width: 55px;
+            height: 55px;
+            transition: filter 0.1s ease, opacity 0.1s ease;
+        }
+
+        .dpad-btn img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            pointer-events: none;
+        }
+
+        .dpad-btn.pressed {
+            filter: brightness(1.4) drop-shadow(0 0 4px rgba(255,255,255,0.6));
+            opacity: 0.8;
+            transform: scale(0.95);
+        }
+
+        .action-btn {
+            width: 75px;  
+            height: 75px; 
+            border-radius: 50%;
+            background-color: rgba(255, 87, 34, 0.35);
+            border: 2px solid #ff5722;
+            color: white;
+            font-size: 22px;
+            font-weight: bold;
+            pointer-events: auto;
+            transition: background-color 0.1s ease, transform 0.1s ease;
+        }
+
+        .action-btn.pressed {
+            background-color: rgba(255, 87, 34, 0.85) !important;
+            border-color: #ff9800;
+            transform: scale(0.92);
+        }
+
+        .interaction-btn {
+            display: none;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background-color: rgba(76, 175, 80, 0.5);
+            border: 2px solid #4caf50;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            pointer-events: auto;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.1s ease, transform 0.1s ease;
+        }
+
+        .interaction-btn.pressed {
+            background-color: rgba(76, 175, 80, 0.9) !important;
+            border-color: #81c784;
+            transform: scale(0.92);
+        }
+
+        .bottom-ui-container {
+            position: fixed;
+            bottom: 12px; 
+            left: 50%;    
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            pointer-events: auto;
+            z-index: 50;
+        }
+
+        .hotbar {
+            width: 290px;
+            max-width: 75vw;
+            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASAAAAAgCAYAAACy9KU0AAAB00lEQVR4AezUwW3CQBAFUMOdC33QRopOPXB1C4nmYEceLOWSjEfrF2mEbCT+7tvNv95uty/DwB1wB464A9fJHwECBA4SWAvofr9Pj8ejbPJ+5fN3/873/7cWUBTC8/n8rJjI2puK7MjYy4538V3FRNbeVGRHxl52vIvvKiayYvJUZEdGzl2e47uKWfLyZ0V2ZOTc5Tm+q5glLz43BRQvDAECBKoEFFCVtBwCBN4EFNAbiRcECFQJHFZAVRuUQ4BAXwEF1PdsrIzA8AIKaPgjtkECfQUUUN+zsbL/EvC7bQQUUJujsBAC5xNQQOc7czsm0EZAAbU5CgshcD6B8xXQ+c7Yjgm0FVBAbY/GwgiML6CAxj9jOyTQVkABtT0aCxtPwI6ygALKIp4JECgTUEBl1IIIEMgCCiiLeCZAoExAAZVRCyJAIAsooCzimQCBMgEFVEYtiACBLKCAsohnAuMJtN2RAmp7NBZGYHwBBTT+GdshgbYCCqjt0VgYgfEFFND4Z2yHBNoKbArocrl8VMzr9doFqciODPn89y5g3I2Kcf9+7t9aQPM8T5WTL0BldmTJ3wqESeVs06fSuxf7lL8VCJPKWdLXAlpe+CRAgMBfCfz2O98AAAD//0HekjkAAAAGSURBVAMAZqECeWt6X/wAAAAASUVORK5CYII=');
+            background-size: 100% 100%;
+            display: grid;
+            grid-template-columns: repeat(9, 1fr);
+            padding: 3px;
+            gap: 2px;
+        }
+
+        .slot {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            cursor: pointer;
+            border-radius: 2px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slot img {
+            width: 75%;
+            height: 75%;
+            object-fit: contain;
+            image-rendering: pixelated;
+            pointer-events: none;
+        }
+
+        .slot span {
+            position: absolute;
+            bottom: 1px;
+            right: 2px;
+            color: white;
+            font-size: 9px;
+            font-weight: bold;
+            text-shadow: 1px 1px 0px #000;
+            pointer-events: none;
+        }
+
+        .slot.active {
+            border: 2px solid white;
+            background-color: rgba(255, 255, 255, 0.25);
+        }
+
+        .inv-open-btn {
+            width: 38px;
+            height: 38px;
+            background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABhUlEQVR4AeyV3W2EQAyEL3m/Z1qhASR6oL70gEQDtMIzBRB/0RktG9vsafNzD0Qa7eIZjwdfdPd+++e/K8C1gWsDr7+Bpmm2Gpx9zYQbYPCyLB81wCMK4QagkcFRcwmHB16e1g3gNfx03QxAYkk+yjnUDsTj4bVZXmYAS5jXME6R86XPYYBHcncL8MAbRsCIpy8MgAADjHLApch5nulNNdb9NABNGOWgniLneU55734IcL/fN+CJa+t4g9RnDwDRtu0NpILoLmvuQaRJObwBs7S+B9DCNE2j3qOTFaeItMpZ3t8CqPivzqcCsO4SPBO+OACDMZa1hz9OaFTL/QyHAHxGXdf1XhPDPU7rkQZvZqiWcw+wruub/Hf28zxT/xXgzQxm6YA9AAUIwD2HvFnRj5Osf0Cb9/OMN+CuOATQondiLG8wREDj9Vt1M4CYfH0cVoO8wRjB6pHAPZ4WZwZAKEPcEPClYDhent4NQAONGNQAD7w8hAFowqAGeEQ4DRA1l3Bnmk8AAAD//9FTIu0AAAAGSURBVAMAoGR+UG4AFBsAAAAASUVORK5CYII=');
+            background-size: cover;
+            background-color: rgba(0,0,0,0.6);
+            border: 2px solid #888;
+            border-radius: 4px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .inv-open-btn:active {
+            transform: scale(0.95);
+        }
+
+        .pause-btn {
+            position: fixed;
+            top: 10px;
+            right: 15px;
+            width: 36px;
+            height: 36px;
+            background: rgba(0,0,0,0.6);
+            border: 2px solid #888;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+            border-radius: 4px;
+            cursor: pointer;
+            z-index: 60;
+            pointer-events: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .inventory-modal, .worktable-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            width: 100dvw;
+            height: 100vh;
+            height: 100dvh;
+            background-color: rgba(0, 0, 0, 0.75);
+            z-index: 100;
+            pointer-events: auto;
+            justify-content: center;
+            align-items: center;
+            padding: 4px;
+        }
+
+        .inventory-window, .worktable-window {
+            width: 98vw;
+            max-width: 720px;
+            background-color: #c6c6c6;
+            border: 4px solid #373737;
+            border-radius: 6px;
+            display: flex;
+            padding: 8px;
+            gap: 6px;
+            position: relative;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+
+        .close-inv {
+            position: absolute;
+            top: 4px;
+            right: 8px;
+            background: #d32f2f;
+            color: white;
+            border: 2px solid #555;
+            font-weight: bold;
+            padding: 1px 6px;
+            cursor: pointer;
+            border-radius: 3px;
+            font-size: 11px;
+            z-index: 10;
+        }
+
+        .inv-col-left {
+            flex: 0.7;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            background: #8b8b8b;
+            padding: 5px;
+            border: 2px solid #373737;
+            border-radius: 4px;
+        }
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: #fff;
+            border: 2px solid #373737;
+            padding: 3px;
+            border-radius: 3px;
+        }
+        .search-box input {
+            border: none;
+            outline: none;
+            width: 100%;
+            font-size: 9px;
+            background: transparent;
+        }
+        .category-list {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            overflow-y: auto;
+        }
+        .cat-btn {
+            background: #c6c6c6;
+            border: 2px solid #373737;
+            padding: 5px;
+            font-size: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: left;
+        }
+        .cat-btn:active, .cat-btn.active { background: #a3a3a3; border-color: #ffeb3b; }
+
+        .inv-col-center {
+            flex: 2.9;
+            display: flex;
+            flex-direction: column;
+            background: #8b8b8b;
+            padding: 6px;
+            border: 2px solid #373737;
+            border-radius: 4px;
+            gap: 5px;
+        }
+
+        .inv-section-title {
+            font-size: 9px;
+            font-weight: bold;
+            color: #222;
+            margin-bottom: 2px;
+        }
+
+        .inv-grid-27 {
+            display: grid;
+            grid-template-columns: repeat(9, 1fr);
+            gap: 3px;
+            width: 100%;
+        }
+
+        .inv-separator {
+            width: 100%;
+            height: 2px;
+            background-color: #222;
+            margin: 3px 0;
+            border-bottom: 1px solid #555;
+        }
+
+        .inv-hotbar-grid {
+            display: grid;
+            grid-template-columns: repeat(9, 1fr);
+            gap: 3px;
+            width: 100%;
+        }
+
+        .inv-slot-item, .craft-slot, .wt-slot {
+            background-color: #8b8b8b;
+            border: 2px solid #373737;
+            border-radius: 2px;
+            width: 100%;
+            aspect-ratio: 1 / 1; 
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            touch-action: none;
+        }
+        .inv-slot-item img, .craft-slot img, .wt-slot img, .craft-output img, .wt-output img {
+            width: 75%;
+            height: 75%;
+            object-fit: contain;
+            image-rendering: pixelated;
+            pointer-events: none;
+        }
+        .inv-slot-item span, .craft-slot span, .wt-slot span, .craft-output span, .wt-output span {
+            position: absolute;
+            bottom: 1px;
+            right: 2px;
+            color: white;
+            font-size: 9px;
+            font-weight: bold;
+            text-shadow: 1px 1px 0px #000;
+            pointer-events: none;
+        }
+
+        .inv-slot-item.selected {
+            border: 2px solid #ffeb3b !important;
+            background-color: rgba(255, 235, 59, 0.3);
+        }
+
+        #cursorItem {
+            display: none;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            width: 36px;
+            height: 36px;
+            transform: translate(-50%, -50%);
+            align-items: center;
+            justify-content: center;
+        }
+        #cursorItem img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            image-rendering: pixelated;
+        }
+        #cursorItem span {
+            position: absolute;
+            bottom: 1px;
+            right: 2px;
+            color: white;
+            font-size: 10px;
+            font-weight: bold;
+            text-shadow: 1px 1px 0px #000;
+        }
+
+        .inv-col-right {
+            flex: 1.1;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            background: #8b8b8b;
+            padding: 5px;
+            border: 2px solid #373737;
+            border-radius: 4px;
+            align-items: center;
+        }
+        .crafting-area {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            background: #c6c6c6;
+            padding: 5px;
+            border: 2px solid #373737;
+            border-radius: 4px;
+        }
+        .craft-grid-2x2 {
+            display: grid;
+            grid-template-columns: repeat(2, 28px);
+            grid-template-rows: repeat(2, 28px);
+            gap: 2px;
+        }
+        .craft-arrow {
+            font-size: 12px;
+            font-weight: bold;
+            color: #373737;
+        }
+        .craft-output-container {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            align-items: center;
+        }
+        .craft-output {
+            width: 34px;
+            height: 34px;
+            background: #8b8b8b;
+            border: 2px solid #373737;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            cursor: pointer;
+        }
+        .craft-all-btn {
+            width: 34px;
+            height: 16px;
+            background: #555;
+            border: 2px solid #222;
+            color: #fff;
+            font-size: 7px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-shadow: 1px 1px #000;
+        }
+        .craft-all-btn:active {
+            background: #333;
+        }
+
+        .recipes-category-container {
+            flex: 1;
+            width: 100%;
+            background: #c6c6c6;
+            border: 2px solid #373737;
+            padding: 4px;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            overflow-y: auto;
+        }
+        .recipe-item-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #8b8b8b;
+            border: 2px solid #373737;
+            padding: 3px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+        .recipe-item-row:active {
+            background: #666;
+        }
+        .recipe-item-row img {
+            width: 22px;
+            height: 22px;
+            object-fit: contain;
+            image-rendering: pixelated;
+        }
+
+        .worktable-grid-3x3 {
+            display: grid;
+            grid-template-columns: repeat(3, 26px);
+            grid-template-rows: repeat(3, 26px);
+            gap: 2px;
+        }
+
+        #customSplitModal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0,0,0,0.6);
+            z-index: 300;
+            align-items: center;
+            justify-content: center;
+        }
+        .split-box {
+            background: #c6c6c6;
+            border: 3px solid #373737;
+            padding: 12px;
+            border-radius: 6px;
+            width: 260px;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+        }
+        .split-box h4 {
+            margin: 0 0 8px 0;
+            font-size: 11px;
+            color: #222;
+        }
+        .split-input {
+            width: 100%;
+            background: #fff;
+            border: 2px solid #373737;
+            padding: 5px;
+            font-size: 14px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 8px;
+            outline: none;
+        }
+        .split-quick-buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 4px;
+            margin-bottom: 8px;
+        }
+        .split-quick-buttons button {
+            background: #777;
+            border: 2px solid #373737;
+            color: white;
+            font-size: 9px;
+            font-weight: bold;
+            padding: 4px 0;
+            cursor: pointer;
+            border-radius: 2px;
+        }
+        .split-quick-buttons button.active {
+            background: #ffcc00;
+            color: #000;
+            border-color: #000;
+        }
+        .split-actions {
+            display: flex;
+            gap: 6px;
+        }
+        .split-actions button {
+            flex: 1;
+            height: 30px;
+            font-size: 10px;
+            font-weight: bold;
+            background: #8b8b8b;
+            border: 2px solid #373737;
+            color: white;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+        .split-actions button:active { background: #555; }
+    </style>
+</head>
+<body>
+
+    <canvas id="gameCanvas"></canvas>
+    <div id="cursorItem"></div>
+
+    <div id="customSplitModal">
+        <div class="split-box">
+            <h4>SEPARAR CANTIDAD</h4>
+            <input type="number" id="splitInputNumber" class="split-input" min="1" inputmode="numeric" pattern="[0-9]*">
+            <div class="split-quick-buttons">
+                <button id="btnDiv2" onclick="setModificadorDiv(1, 'btnDiv2')">1 Slot</button>
+                <button id="btnDiv3" onclick="setModificadorDiv(2, 'btnDiv3')">x2 Slots</button>
+                <button id="btnDivX2" onclick="setModificadorDiv(3, 'btnDivX2')">x3 Slots</button>
+                <button id="btnDivX3" onclick="setModificadorDiv(4, 'btnDivX3')">x4 Slots</button>
+            </div>
+            <div class="split-actions">
+                <button onclick="confirmarCustomSplit()" style="background: #2e8b57;">Aceptar</button>
+                <button onclick="cerrarCustomSplitModal()" style="background: #a33;">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MESA DE TRABAJO -->
+    <div class="worktable-modal" id="worktableModal">
+        <div class="worktable-window">
+            <button class="close-inv" onclick="toggleWorktable()">X</button>
+            
+            <div class="inv-col-left">
+                <div class="search-box">
+                    <span>🔍</span>
+                    <input type="text" placeholder="Buscar...">
+                </div>
+                <div class="category-list">
+                    <button class="cat-btn active" onclick="seleccionarCategoria('todos', 'wt')">📦 Todos</button>
+                    <button class="cat-btn" onclick="seleccionarCategoria('madera', 'wt')">🪵 Madera</button>
+                    <button class="cat-btn" onclick="seleccionarCategoria('tools', 'wt')">⛏️ Tools</button>
+                    <button class="cat-btn" onclick="seleccionarCategoria('bloques', 'wt')">🧱 Bloques</button>
+                </div>
+            </div>
+
+            <div class="inv-col-center">
+                <div>
+                    <div class="inv-section-title">INVENTARIO (27 SLOTS)</div>
+                    <div class="inv-grid-27" id="wtInvGrid27"></div>
+                </div>
+
+                <div class="inv-separator"></div>
+
+                <div>
+                    <div class="inv-section-title">SLOTS PRINCIPALES (HOTBAR)</div>
+                    <div class="inv-hotbar-grid" id="wtInvHotbarGrid"></div>
+                </div>
+            </div>
+
+            <div class="inv-col-right">
+                <div style="font-size: 9px; font-weight: bold; color: #373737;">MESA (3x3)</div>
+                <div class="crafting-area" style="padding: 3px;">
+                    <div class="worktable-grid-3x3" id="wtGrid"></div>
+                    <div class="craft-arrow">➔</div>
+                    <div class="craft-output-container">
+                        <div class="craft-output" id="wtOutput" onclick="recolectarWorktable(false)"></div>
+                        <button class="craft-all-btn" onclick="recolectarWorktable(true)">TODO</button>
+                    </div>
+                </div>
+                <div style="font-size: 9px; font-weight: bold; color: #373737;">RECETAS RÁPIDAS</div>
+                <div class="recipes-category-container" id="wtRecipesContainer"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="menu-screen active" id="screenMain">
+        <div class="game-title">MYTHIC RPG 2D</div>
+        <button class="menu-btn" onclick="abrirSelectorMundos()">JUGAR</button>
+        <button class="menu-btn" onclick="abrirOpciones()">OPCIONES</button>
+        <button class="menu-btn" onclick="salirJuego()">SALIR</button>
+    </div>
+
+    <div class="menu-screen" id="screenWorlds">
+        <div class="menu-panel">
+            <div class="panel-header">SELECCIONAR MUNDO</div>
+            <div class="world-list" id="worldListContainer"></div>
+            <div class="panel-footer-btns">
+                <button class="small-btn" onclick="entrarMundoSeleccionado()">Jugar Mundo</button>
+                <button class="small-btn" onclick="abrirCrearMundo()">Crear Nuevo</button>
+                <button class="small-btn" style="background: #a33;" onclick="eliminarMundoSeleccionado()">Eliminar</button>
+                <button class="small-btn" onclick="volverMenuPrincipal()">Volver</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="menu-screen" id="screenCreateWorld">
+        <div class="menu-panel" style="max-width: 450px; height: auto;">
+            <div class="panel-header">CREAR NUEVO MUNDO</div>
+            <div class="form-group">
+                <label>NOMBRE DEL MUNDO</label>
+                <input type="text" id="inputWorldName" value="Mi Aventura">
+            </div>
+            <div class="form-group">
+                <label>SEMILLA (SEED)</label>
+                <div style="display: flex; gap: 5px;">
+                    <input type="text" id="inputWorldSeed" value="12345" style="flex:1;">
+                    <button class="small-btn" style="width: 80px;" onclick="generarSeedAleatoria()">Aleatoria</button>
+                </div>
+            </div>
+            <div class="panel-footer-btns">
+                <button class="small-btn" style="background: #2e8b57;" onclick="crearYEntrarMundo()">¡Crear Mundo!</button>
+                <button class="small-btn" onclick="abrirSelectorMundos()">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="menu-screen" id="screenOptions">
+        <div class="menu-panel" style="max-width: 450px; height: auto;">
+            <div class="panel-header">OPCIONES</div>
+            <div class="option-row">
+                <span>Volumen General</span>
+                <input type="range" min="0" max="100" value="80">
+            </div>
+            <div class="option-row">
+                <span>Escala de Gráficos (Zoom)</span>
+                <input type="range" min="1" max="2" step="0.1" value="1.4" id="zoomRange" oninput="cambiarZoom(this.value)">
+            </div>
+            <div class="panel-footer-btns" style="margin-top: 15px;">
+                <button class="small-btn" onclick="volverMenuPrincipal()">Guardar y Volver</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="gameUI">
+        <button class="pause-btn" onclick="pausarJuego()">⏸</button>
+
+        <div class="controls-overlay">
+            <div class="btn-group dpad">
+                <div></div>
+                <div class="btn dpad-btn" id="up"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAACdUlEQVR4AeybQXaDMAxESY/BoXLYHIprtAwvcgzBtmRLAlz6ouJYsjXzxaKb/gzfP7/zVs8x2/t8tgBg/JPtc7XyGANYJcZxHHqKzSyDVwIQNlAI43hO0/TqIeCFPGH9jsUzACyL9+YydaxhHM8egrzsQQCA4BEFKEaETfvF077FMMATAh7jfgEAEiiIkw5rMk9P85bwCK/UKACgjf/2PBLAdurb7y6zOArAIWb3iB4FYE8L9tzBHAGgZLKUByi1OAKAmniNi7wBcKfLrWtm4AnAzZSEiicAiS7UmgDDxXF4Aag1U3su9phdewAwN5F1WEh6AChIKKZNAVoDMBVfRMcosAbAkMAqMQNpCUBbtPZ9C3krACZiF8XKv6wAKMsM16mDtQCgLjLYN1hoA/Awr9pDG4DBjHavVIOgCUBN1K5lo01NAEYSk9eqANcCoCImaTWdaO6rAaBZRNqffUYDgL3KfIfsAPJHh6EVQFPzkjiPfAuAM5mv1tICwGNAkh5VEGoBVDWTuPGqrQXgpU/aRzyYGgDiJlIXnvVSAFcwL9IoBeA5nJZebAgSAOxLW5R7n+UCuKJ5lmYuAO/BuPXjAGCRdFMsa1TUzgEga3m+6iyEEoDs4fN5lSvKAejJfNJLDoAc5wlOSCWkACSJSRucqH7XUwrAaxbeY8y21p8UgHVVx99uAB0Pl2XtfgNYmDouut+AjofLsna/AYRpmib8x9juX0tU08NzHMcnvJKX1RuABAoQVNDLE54Q8Bh7AoBHvEEFKI73r7wmL+Qt8vIAAHxPQsDhqwcM7pnHPgHA+gsCDvUSMBhF8BoDQD4k8OUKUaFx5fEPAAD//yPJN7oAAAAGSURBVAMAFY8SZ5DuFFYAAAAASUVORK5CYII=" alt="Up"></div>
+                <div></div>
+                <div class="btn dpad-btn" id="left"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAACaElEQVR4AdyZUXarMAwF2y6DRXWxWRTbSDM55zqghBQcbEt6591KxjZopp/9+Xr+d709ypwb3uO/FQD4Yzdnt2JcClhtTNP0lSnmd1lYJaA84CDg8zxfMgUm2Ba5MyPg3miDg4BrnaXCBJvhuSKgPHtxoOw5bn6PzGYZiwBtYOrICweeBZzsHkFsYuViEcBCB+gdB2hSNaJlXAmoemPfS9XgW2NGEQA42eKofu5dANCkGvC/i54FNAWXGI8CACeasWn1JABo0hTYvtyLgO7gEjFaAOBE8zSv9gOjBABN7Dzd1yMEuACX6Z4CACf6tovaS4A7cNlvLQBwou+5q60EAE3cAduBWggIAS4RZwoAnOjdIeoZAoAmIYDtkJ8KCAsuEbUCACd6T9h6VADQJCywHfyIgFTgErFHAOBEd1LVdwKAJqmALcyWgDTgFtiutwRc7MGs6y0B8CKB0KfNOwGCTi1hjwBEIIHQp8peAYJGAtE6fD0qQMBpJNQKQAQSCH3YfCJA0KElnCEAEUgg9KFylgBBI4Fo7b6eLUDAYSS0EoAIJBB6t2kpQNCuJfQQgAgkEHpX6SVA0EggWg+vvQUIuJkEfWBvHSWA+ZBA6IdlpABBD5XgQQAikEDou8aLAEEjgWjdvHoTIOBuErwKQAQSCH2zeBYg6KYSIghABBII/amJIkDQSCBaf1xXAqZpivIXoWoJlrEImOf5btMeuD/0+QMJZPd0YhMrF4sAFssN1kFySIJlRMD3EpQDMrV8Hr2HCTbD8Y0Anr2UwKUseQUPuATQP0ngUpYAuEhhXQpgv2ywiJCKGVeMfwAAAP//2fFx/gAAAAZJREFUAwCeQwhngi6wkwAAAABJRU5ErkJggg==" alt="Left"></div>
+                <div></div>
+                <div class="btn dpad-btn" id="right"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAACb0lEQVR4AeSZ7XGDMBAFScqgqBTromjDYZl5spCxMQJJp3PGL3f6wNxufuZ3eP65z1ueM+M9PqkAwB+nPrsVYyxgdTCO4+Apyd8ysEpA2OAi4NM03TwFJtiiLMwIWBodcBFwrb1UmGBLeO4ICHsbF8LZi+bvxb7Z7ZQxCNABpg5OjwRy8LH618UmViYIAljoAn1GupIgvpUAbZ6oSCAnvqLuo1cL0PRIIFqbraUECNi8hNICEIEEQm8uNQQI2qSEmgIQgQRCbyK1BQgaCUTrZrWVAAFXl6AXq7YWwBxIIPTVY0GAoJtIsCQAEUgg9FViTYCgkUC0LlatChBwcQnWBSACCYT+8vQgQNBFJPQkABFIIPSXpDcBgkYC0Tq79ipAwKcl9C4AEUgg9IfjQYCgsyR4EoAIJBD6j+JNgKCRQLR+Wb0KEPCuBO8ChtkEEsjcPn++QYCoNyV8k4CbTMT1GwQATmLu0HsWADQJsFuNVwG74JLhTQDgRHy71YsAoMkucHrBg4AscInoWQDgRCxZtUcBQJMs4PSh3gRcBi4RvQgAnGjuy6p1AUCTy4DTL7IsoCi4RFgUADjRjEWrNQGnwY/asiIAcHJ0/tP3WwsAmpwGyf2ClgKagktYCwGAE83QtNYUADRpCpy+vJYAc+ASUVoA4ETvM1dLCQCamANOByohoAtwiVgJGMdx858HurxTASc719oep4xBwDRNy2TphWXz/S+gyftbBk7FJlZGCgJYxAesP0gX4DFHyoiAn/SCTMX7vfcwpfAz0w8C5jpsSuAhL9mCB1wC6J8k8JCXABglsMYCOA8HLHpIxowrxn8AAAD//9ZYt30AAAAGSURBVAMAppAIZzh+67QAAAAASUVORK5CYII=" alt="Right"></div>
+                <div></div>
+                <div class="btn dpad-btn" id="down"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAACaElEQVR4AeybXXaDIBBG0y7DRWWxWZTbaHNzAkEiCuMwItrTOSK/37342P7evn/+nl091xPv8xsLAPwz2mdrwhgKmAwMw3DrqaK79KxOgO9gIuA8x3F89FCwOCba73oxI+DVeHe+bp024Dx7KMcyJwEBnpEJTKZ8ZycNmCgYQyQvgAEmhIM9tmGE1bF5Aa7jbM9LwNluPOa9voDYyNnery/gbDce815fQGzk/X5/Pnus25Nr8pv6Ah6TWX28zDKlBPSBnEGxJGDWWMaeLU5JsiwJaBFEkikJz2ZrAhYXs8HRa00AfEeWsJo9RwASuq1cAasmGzSUlTlXQIN8i5Gy4NmhRED2pmx8lCoRANMRJBRlLBWAhJarCB4QiYDiQzio1ZIIaJVFdDFSAaLDWjQnFQBLSxKSWQi6VFsELO1rOSaGJ+RWAZsOJ8DetVXA3vk3X4CGgM0hhBZVztUQQH6VMGxkXVoCrHOrCdcUoBbK0qamAHJbSFA9Q1sAEmqWKjxBawhQD0nQWlVDQK2sVcTWEqAdVns/f0m1BHBAtdBsrlU1BWhlrCqytoCq4TUM1xawNWOxwNIDLQRIIaTrihxYCCCQCQwHlZaVgNJcZsIsBeRC5c4rlTo731LAbIC9O60FrN3u2ri6L2sBAJhDcmiq9hCQyrKLmL0ExLDxe0qSev9eAtRBpBt6AeM48h9j/HmsdK/Sde7W3bN0vWj+MAx3WN1iL4AOBphA8W5QZvAwUTCGXAj4CTvcBCaH/UduOxbHFrD8IID3pAQWH70AnIOn3wmg/SWBRb0UgEF51lAA436AlyOUIOOE8R8AAP//M8566wAAAAZJREFUAwCsWxJnehSIqgAAAABJRU5ErkJggg==" alt="Down"></div>
+                <div></div>
+            </div>
+
+            <div class="action-panel">
+                <div class="btn action-btn" id="actionBtn">A</div>
+                <div class="btn interaction-btn" id="interactBtn">🛠️</div>
+            </div>
+        </div>
+
+        <div class="bottom-ui-container">
+            <div class="hotbar" id="hotbar">
+                <div class="slot active" onclick="seleccionarSlot(0)"></div>
+                <div class="slot" onclick="seleccionarSlot(1)"></div>
+                <div class="slot" onclick="seleccionarSlot(2)"></div>
+                <div class="slot" onclick="seleccionarSlot(3)"></div>
+                <div class="slot" onclick="seleccionarSlot(4)"></div>
+                <div class="slot" onclick="seleccionarSlot(5)"></div>
+                <div class="slot" onclick="seleccionarSlot(6)"></div>
+                <div class="slot" onclick="seleccionarSlot(7)"></div>
+                <div class="slot" onclick="seleccionarSlot(8)"></div>
+            </div>
+            <div class="inv-open-btn" onclick="toggleInventario()"></div>
+        </div>
+    </div>
+
+    <!-- INVENTARIO PRINCIPAL -->
+    <div class="inventory-modal" id="invModal">
+        <div class="inventory-window" id="invWindow">
+            <button class="close-inv" onclick="toggleInventario()">X</button>
+            
+            <div class="inv-col-left">
+                <div class="search-box">
+                    <span>🔍</span>
+                    <input type="text" placeholder="Buscar...">
+                </div>
+                <div class="category-list">
+                    <button class="cat-btn active" onclick="seleccionarCategoria('todos', 'inv')">📦 Todos</button>
+                    <button class="cat-btn" onclick="seleccionarCategoria('madera', 'inv')">🪵 Madera</button>
+                    <button class="cat-btn" onclick="seleccionarCategoria('tools', 'inv')">⛏️ Tools</button>
+                    <button class="cat-btn" onclick="seleccionarCategoria('bloques', 'inv')">🧱 Bloques</button>
+                </div>
+            </div>
+
+            <div class="inv-col-center">
+                <div>
+                    <div class="inv-section-title">INVENTARIO (27 SLOTS)</div>
+                    <div class="inv-grid-27" id="invGrid27"></div>
+                </div>
+
+                <div class="inv-separator"></div>
+
+                <div>
+                    <div class="inv-section-title">SLOTS PRINCIPALES (HOTBAR)</div>
+                    <div class="inv-hotbar-grid" id="invHotbarGrid"></div>
+                </div>
+            </div>
+
+            <div class="inv-col-right">
+                <div style="font-size: 9px; font-weight: bold; color: #373737;">CRAFTEO (2x2)</div>
+                <div class="crafting-area">
+                    <div class="craft-grid-2x2" id="craftGrid"></div>
+                    <div class="craft-arrow">➔</div>
+                    <div class="craft-output-container">
+                        <div class="craft-output" id="craftOutput" onclick="recolectarCrafting(false)"></div>
+                        <button class="craft-all-btn" onclick="recolectarCrafting(true)">TODO</button>
+                    </div>
+                </div>
+                <div style="font-size: 9px; font-weight: bold; color: #373737;">RECETAS RÁPIDAS</div>
+                <div class="recipes-category-container" id="invRecipesContainer"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+const TEXTURAS_EMBEBIDAS = {
+  "abajo": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAACaElEQVR4AeybXXaDIBBG0y7DRWWxWZTbaHNzAkEiCuMwItrTOSK/37342P7evn/+nl091xPv8xsLAPwz2mdrwhgKmAwMw3DrqaK79KxOgO9gIuA8x3F89FCwOCba73oxI+DVeHe+bp024Dx7KMcyJwEBnpEJTKZ8ZycNmCgYQyQvgAEmhIM9tmGE1bF5Aa7jbM9LwNluPOa9voDYyNnery/gbDce815fQGzk/X5/Pnus25Nr8pv6Ah6TWX28zDKlBPSBnEGxJGDWWMaeLU5JsiwJaBFEkikJz2ZrAhYXs8HRa00AfEeWsJo9RwASuq1cAasmGzSUlTlXQIN8i5Gy4NmhRED2pmx8lCoRANMRJBRlLBWAhJarCB4QiYDiQzio1ZIIaJVFdDFSAaLDWjQnFQBLSxKSWQi6VFsELO1rOSaGJ+RWAZsOJ8DetVXA3vk3X4CGgM0hhBZVztUQQH6VMGxkXVoCrHOrCdcUoBbK0qamAHJbSFA9Q1sAEmqWKjxBawhQD0nQWlVDQK2sVcTWEqAdVns/f0m1BHBAtdBsrlU1BWhlrCqytoCq4TUM1xawNWOxwNIDLQRIIaTrihxYCCCQCQwHlZaVgNJcZsIsBeRC5c4rlTo731LAbIC9O60FrN3u2ri6L2sBAJhDcmiq9hCQyrKLmL0ExLDxe0qSev9eAtRBpBt6AeM48h9j/HmsdK/Sde7W3bN0vWj+MAx3WN1iL4AOBphA8W5QZvAwUTCGXAj4CTvcBCaH/UduOxbHFrD8IID3pAQWH70AnIOn3wmg/SWBRb0UgEF51lAA436AlyOUIOOE8R8AAP//M8566wAAAAZJREFUAwCsWxJnehSIqgAAAABJRU5ErkJggg==",
+  "acha": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAACp0lEQVR4AcSWT0tUYRTGz5UklJxSSyiFiSDa9R3aCu3cRS3aRLQJwk21Capdy4igRSCCC9d+F3eOG0Hxv+hGuJ7f0fNyZhxnrnPvRbnPnPOe+855nnPeP86Q3PBf1QJyrQeoKfZUKSD/8WFW5t+8gLmwiKoEGPnE3VG5NzaCgAjERMR3MtQ2Gmxg5Hz1wfgdQcSfz3MMjXTh+yuJ0BfE1Zw/ZQUk8mePp2Rr90gQcZ5ahCVZ39j1YVdbRkB+sd5WNeQwrK5tYoz8y+8V83uJKCPA1vv500dye/iWEcXq6Qgd6CeijICM5C8//rO2I4IusAdQg4+NIl5/XSSU8eEoI4AcJMsQwQDs7B9jBEsXGAQRzCeUUFZASoRDF7CQ0wn2A5YYItRyAiKqO4Zvvy1pfpGH9xtm4wciwMrfTxKhc/KyHbCTsHd4YrseEWxEF+FLQEzJpNVqyfHBNm5CGQHpDvDbjzazHyBkOXwjuk2swRlUQKo85DI3imAvEEQQwO/EIAKMnERUDlgCxoCjqdZOxvTMtLpiN6R34eh02GKz735hs+sKaCMnA5sLEfhOjg+mJhp2R3j1I2PjQox3jusIMHLIgCfAIqKTnDgYbUwKVTebzUTu1fO+qIC04fiSA2L89z+XMZcuGYLAq4YYaCzNLSLAKmedY+UFyDPIIi6IE7mO+15ERs5EJ4cYEOtXuc6BLEJD7U+vDqS2R3L/egFyn9rTXiXAyGPbvWqyVUVOrm4CEjkTQF3k5I4C7L8UNxkvuqHKyj2/C7CqIec8U3HnutdBjggE5PyKhZQAIiBj/GRmkpAwVofdrKbaBwF2XZIWUqyLwK+TnPwmAMfv6y4iaqkcTpAEMOgUQaxuICCbm/+feFwEm1GDtVav+dNVbCIQAqpcd0h64QwAAP//HIHDvwAAAAZJREFUAwBfDfg9qdnAbQAAAABJRU5ErkJggg==",
+  "arbol": "data:image/png;base64,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",
+  "arriba": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAACdUlEQVR4AeybQXaDMAxESY/BoXLYHIprtAwvcgzBtmRLAlz6ouJYsjXzxaKb/gzfP7/zVs8x2/t8tgBg/JPtc7XyGANYJcZxHHqKzSyDVwIQNlAI43hO0/TqIeCFPGH9jsUzACyL9+YydaxhHM8egrzsQQCA4BEFKEaETfvF077FMMATAh7jfgEAEiiIkw5rMk9P85bwCK/UKACgjf/2PBLAdurb7y6zOArAIWb3iB4FYE8L9tzBHAGgZLKUByi1OAKAmniNi7wBcKfLrWtm4AnAzZSEiicAiS7UmgDDxXF4Aag1U3su9phdewAwN5F1WEh6AChIKKZNAVoDMBVfRMcosAbAkMAqMQNpCUBbtPZ9C3krACZiF8XKv6wAKMsM16mDtQCgLjLYN1hoA/Awr9pDG4DBjHavVIOgCUBN1K5lo01NAEYSk9eqANcCoCImaTWdaO6rAaBZRNqffUYDgL3KfIfsAPJHh6EVQFPzkjiPfAuAM5mv1tICwGNAkh5VEGoBVDWTuPGqrQXgpU/aRzyYGgDiJlIXnvVSAFcwL9IoBeA5nJZebAgSAOxLW5R7n+UCuKJ5lmYuAO/BuPXjAGCRdFMsa1TUzgEga3m+6iyEEoDs4fN5lSvKAejJfNJLDoAc5wlOSCWkACSJSRucqH7XUwrAaxbeY8y21p8UgHVVx99uAB0Pl2XtfgNYmDouut+AjofLsna/AYRpmib8x9juX0tU08NzHMcnvJKX1RuABAoQVNDLE54Q8Bh7AoBHvEEFKI73r7wmL+Qt8vIAAHxPQsDhqwcM7pnHPgHA+gsCDvUSMBhF8BoDQD4k8OUKUaFx5fEPAAD//yPJN7oAAAAGSURBVAMAFY8SZ5DuFFYAAAAASUVORK5CYII=",
+  "derecha": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAACb0lEQVR4AeSZ7XGDMBAFScqgqBTromjDYZl5spCxMQJJp3PGL3f6wNxufuZ3eP65z1ueM+M9PqkAwB+nPrsVYyxgdTCO4+Apyd8ysEpA2OAi4NM03TwFJtiiLMwIWBodcBFwrb1UmGBLeO4ICHsbF8LZi+bvxb7Z7ZQxCNABpg5OjwRy8LH618UmViYIAljoAn1GupIgvpUAbZ6oSCAnvqLuo1cL0PRIIFqbraUECNi8hNICEIEEQm8uNQQI2qSEmgIQgQRCbyK1BQgaCUTrZrWVAAFXl6AXq7YWwBxIIPTVY0GAoJtIsCQAEUgg9FViTYCgkUC0LlatChBwcQnWBSACCYT+8vQgQNBFJPQkABFIIPSXpDcBgkYC0Tq79ipAwKcl9C4AEUgg9IfjQYCgsyR4EoAIJBD6j+JNgKCRQLR+Wb0KEPCuBO8ChtkEEsjcPn++QYCoNyV8k4CbTMT1GwQATmLu0HsWADQJsFuNVwG74JLhTQDgRHy71YsAoMkucHrBg4AscInoWQDgRCxZtUcBQJMs4PSh3gRcBi4RvQgAnGjuy6p1AUCTy4DTL7IsoCi4RFgUADjRjEWrNQGnwY/asiIAcHJ0/tP3WwsAmpwGyf2ClgKagktYCwGAE83QtNYUADRpCpy+vJYAc+ASUVoA4ETvM1dLCQCamANOByohoAtwiVgJGMdx858HurxTASc719oep4xBwDRNy2TphWXz/S+gyftbBk7FJlZGCgJYxAesP0gX4DFHyoiAn/SCTMX7vfcwpfAz0w8C5jpsSuAhL9mCB1wC6J8k8JCXABglsMYCOA8HLHpIxowrxn8AAAD//9ZYt30AAAAGSURBVAMAppAIZzh+67QAAAAASUVORK5CYII=",
+  "inventario_btn": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABhUlEQVR4AeyV3W2EQAyEL3m/Z1qhASR6oL70gEQDtMIzBRB/0RktG9vsafNzD0Qa7eIZjwdfdPd+++e/K8C1gWsDr7+Bpmm2Gpx9zYQbYPCyLB81wCMK4QagkcFRcwmHB16e1g3gNfx03QxAYkk+yjnUDsTj4bVZXmYAS5jXME6R86XPYYBHcncL8MAbRsCIpy8MgAADjHLApch5nulNNdb9NABNGOWgniLneU55734IcL/fN+CJa+t4g9RnDwDRtu0NpILoLmvuQaRJObwBs7S+B9DCNE2j3qOTFaeItMpZ3t8CqPivzqcCsO4SPBO+OACDMZa1hz9OaFTL/QyHAHxGXdf1XhPDPU7rkQZvZqiWcw+wruub/Hf28zxT/xXgzQxm6YA9AAUIwD2HvFnRj5Osf0Cb9/OMN+CuOATQondiLG8wREDj9Vt1M4CYfH0cVoO8wRjB6pHAPZ4WZwZAKEPcEPClYDhent4NQAONGNQAD7w8hAFowqAGeEQ4DRA1l3Bnmk8AAAD//9FTIu0AAAAGSURBVAMAoGR+UG4AFBsAAAAASUVORK5CYII=",
+
+=== FIN PARTE 1 DE 4 ===

@@ -1,0 +1,755 @@
+=== INICIO PARTE 3 DE 4 (NO RESPONDER TODAVÍA, ESPERA LAS 4 PARTES) ===
+        const imgIzquierda = new Image(); imgIzquierda.src = "data:image/png;base64,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";
+        const imgDerecha = new Image(); imgDerecha.src = "data:image/png;base64,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";
+
+        let ultimaDireccion = 'abajo';
+        let frameAnimacion = 0;
+        let contadorPasos = 0;
+
+        let gameState = 'MENU'; 
+        let mundosGuardados = JSON.parse(localStorage.getItem('rpg_mundos') || '[]');
+        let mundoSeleccionadoIndex = 0;
+        let mundoActual = null;
+        let zoomGlobal = 1.4;
+
+        let player = { x: 2000, y: 2000, size: 40, speed: 1.5 };
+
+        let hotbar = Array(9).fill(null).map(() => ({ item: null, cantidad: 0 }));
+        let inventarioStorage = Array(27).fill(null).map(() => ({ item: null, cantidad: 0 }));
+        let craftingGrid = Array(4).fill(null).map(() => ({ item: null, cantidad: 0 }));
+        let worktableGrid = Array(9).fill(null).map(() => ({ item: null, cantidad: 0 }));
+        let slotActivo = 0;
+
+        let itemSeleccionado = null; 
+        let pressTimer = null;
+        let splitTarget = null;
+        let multiplicadorSlots = 1;
+        let isHolding = false;
+
+        let categoriaActivaInv = 'todos';
+        let categoriaActivaWt = 'todos';
+
+        let seedActual = 12345;
+        let arbolesDestruidos = new Set();
+        let arbolesEstado = {};
+        let arbolesAnimaciones = {};
+        let itemsEnSuelo = []; 
+        let mesasEnMundo = []; 
+        let ultimoGolpeTiempo = 0;
+
+        function getMaxStack(itemNombre) { 
+            if (itemNombre === 'acha') return 1;
+            return 64; 
+        }
+
+        // Helper para comprobar si un ítem es tronco/madera cortada
+        function esMaderaEnBruto(item) {
+            return item === 'tronco' || item === 'madera';
+        }
+
+        function cambiarPantalla(pantallaId) {
+            document.querySelectorAll('.menu-screen').forEach(s => s.classList.remove('active'));
+            document.getElementById('gameUI').style.display = 'none';
+            
+            if (pantallaId === 'game') {
+                document.getElementById('gameUI').style.display = 'block';
+                gameState = 'PLAYING';
+            } else {
+                document.getElementById(pantallaId).classList.add('active');
+                gameState = pantallaId.toUpperCase();
+            }
+        }
+
+        function volverMenuPrincipal() { cambiarPantalla('screenMain'); }
+        function abrirOpciones() { cambiarPantalla('screenOptions'); }
+        function abrirCrearMundo() { cambiarPantalla('screenCreateWorld'); }
+        function salirJuego() { alert("Puedes cerrar esta pestaña o app."); }
+
+        function abrirSelectorMundos() {
+            actualizarListaMundosUI();
+            cambiarPantalla('screenWorlds');
+        }
+
+        function generarSeedAleatoria() {
+            document.getElementById('inputWorldSeed').value = Math.floor(Math.random() * 1000000);
+        }
+
+        function actualizarListaMundosUI() {
+            const container = document.getElementById('worldListContainer');
+            container.innerHTML = '';
+            if (mundosGuardados.length === 0) {
+                container.innerHTML = `<div style="color: #888; text-align: center; padding: 20px; font-size: 11px;">No hay mundos creados. ¡Crea uno nuevo!</div>`;
+                return;
+            }
+            mundosGuardados.forEach((m, idx) => {
+                let div = document.createElement('div');
+                div.className = `world-item ${idx === mundoSeleccionadoIndex ? 'selected' : ''}`;
+                div.onclick = () => { mundoSeleccionadoIndex = idx; actualizarListaMundosUI(); };
+                div.innerHTML = `
+                    <div class="world-info">
+                        <span class="world-name">🗺️ ${m.nombre}</span>
+                        <span class="world-seed">Semilla: ${m.seed} | Jugado: ${m.fecha}</span>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function crearYEntrarMundo() {
+            let nombre = document.getElementById('inputWorldName').value || "Mi Aventura";
+            let seed = parseInt(document.getElementById('inputWorldSeed').value) || 12345;
+            
+            let nuevoMundo = {
+                nombre: nombre,
+                seed: seed,
+                fecha: new Date().toLocaleDateString(),
+                playerX: 2000,
+                playerY: 2000,
+                hotbar: Array(9).fill(null).map(() => ({ item: null, cantidad: 0 })),
+                storage: Array(27).fill(null).map(() => ({ item: null, cantidad: 0 })),
+                arbolesDestruidos: [], arbolesEstado: {}, itemsEnSuelo: [], mesasEnMundo: []
+            };
+
+            mundosGuardados.push(nuevoMundo);
+            localStorage.setItem('rpg_mundos', JSON.stringify(mundosGuardados));
+            mundoSeleccionadoIndex = mundosGuardados.length - 1;
+            entrarMundoSeleccionado();
+        }
+
+        function eliminarMundoSeleccionado() {
+            if (mundosGuardados.length === 0) return;
+            if (confirm("¿Estás seguro de eliminar este mundo permanentemente?")) {
+                mundosGuardados.splice(mundoSeleccionadoIndex, 1);
+                localStorage.setItem('rpg_mundos', JSON.stringify(mundosGuardados));
+                mundoSeleccionadoIndex = 0;
+                actualizarListaMundosUI();
+            }
+        }
+
+        function entrarMundoSeleccionado() {
+            if (mundosGuardados.length === 0) { abrirCrearMundo(); return; }
+            mundoActual = mundosGuardados[mundoSeleccionadoIndex];
+            seedActual = mundoActual.seed;
+            player.x = mundoActual.playerX;
+            player.y = mundoActual.playerY;
+            hotbar = mundoActual.hotbar;
+            inventarioStorage = mundoActual.storage;
+            arbolesDestruidos = new Set(mundoActual.arbolesDestruidos || []);
+            arbolesEstado = mundoActual.arbolesEstado || {};
+            itemsEnSuelo = mundoActual.itemsEnSuelo || [];
+            mesasEnMundo = mundoActual.mesasEnMundo || [];
+            arbolesAnimaciones = {};
+
+            cambiarPantalla('game');
+            actualizarInventariosVisuales();
+        }
+
+        function pausarJuego() {
+            if (mundoActual) {
+                mundoActual.playerX = player.x; mundoActual.playerY = player.y;
+                mundoActual.hotbar = hotbar; mundoActual.storage = inventarioStorage;
+                mundoActual.arbolesDestruidos = Array.from(arbolesDestruidos);
+                mundoActual.arbolesEstado = arbolesEstado;
+                mundoActual.itemsEnSuelo = itemsEnSuelo;
+                mundoActual.mesasEnMundo = mesasEnMundo;
+                localStorage.setItem('rpg_mundos', JSON.stringify(mundosGuardados));
+            }
+            abrirSelectorMundos();
+        }
+
+        function cambiarZoom(val) { zoomGlobal = parseFloat(val); }
+
+        window.addEventListener('pointermove', (e) => {
+            let clientX = e.clientX || (e.touches && e.touches[0].clientX) || e.pageX;
+            let clientY = e.clientY || (e.touches && e.touches[0].clientY) || e.pageY;
+            
+            const cursorDiv = document.getElementById('cursorItem');
+            if (cursorDiv) {
+                cursorDiv.style.left = clientX + 'px';
+                cursorDiv.style.top = clientY + 'px';
+            }
+        });
+
+        window.addEventListener('pointerup', () => {
+            if (pressTimer) { clearTimeout(pressTimer); pressTimer = null; }
+            isHolding = false;
+        });
+
+        function pseudoRandom(x, y) {
+            let n = Math.sin(x * 12.9898 + y * 78.233 + seedActual) * 43758.5453;
+            return n - Math.floor(n);
+        }
+
+        function getArbolesCercanos() {
+            let lista = [];
+            let chunkSize = 400;
+            let playerChunkX = Math.floor(player.x / chunkSize);
+            let playerChunkY = Math.floor(player.y / chunkSize);
+            let radius = 2;
+
+            for (let cx = playerChunkX - radius; cx <= playerChunkX + radius; cx++) {
+                for (let cy = playerChunkY - radius; cy <= playerChunkY + radius; cy++) {
+                    for (let i = 0; i < 5; i++) {
+                        let rx = pseudoRandom(cx * 100 + i, cy * 100);
+                        let ry = pseudoRandom(cx * 100, cy * 100 + i);
+                        let treeX = cx * chunkSize + rx * (chunkSize - 50);
+                        let treeY = cy * chunkSize + ry * (chunkSize - 50);
+                        let treeId = `${cx},${cy},${i}`;
+
+                        if (!arbolesDestruidos.has(treeId)) {
+                            if (arbolesEstado[treeId] === undefined) arbolesEstado[treeId] = 15;
+                            lista.push({ key: treeId, x: treeX, y: treeY, width: 64, height: 96, hp: arbolesEstado[treeId] });
+                        }
+                    }
+                }
+            }
+            return lista;
+        }
+
+        let keys = { up: false, down: false, left: false, right: false };
+
+        function setupBtn(id, keyName) {
+            const btn = document.getElementById(id);
+            if (!btn) return;
+            const pressOn = (e) => { e.preventDefault(); keys[keyName] = true; btn.classList.add('pressed'); };
+            const pressOff = (e) => { keys[keyName] = false; btn.classList.remove('pressed'); };
+            btn.addEventListener("touchstart", pressOn, { passive: false });
+            btn.addEventListener("touchend", pressOff, { passive: true });
+            btn.addEventListener("touchcancel", pressOff, { passive: true });
+            btn.addEventListener("mousedown", () => { keys[keyName] = true; btn.classList.add('pressed'); });
+            btn.addEventListener("mouseup", () => { keys[keyName] = false; btn.classList.remove('pressed'); });
+            btn.addEventListener("mouseleave", () => { keys[keyName] = false; btn.classList.remove('pressed'); });
+        }
+
+        setupBtn("up", "up"); setupBtn("down", "down"); setupBtn("left", "left"); setupBtn("right", "right");
+
+        const actionBtn = document.getElementById("actionBtn");
+        const actionOn = (e) => { e.preventDefault(); actionBtn.classList.add('pressed'); ejecutarGolpeA(); };
+        const actionOff = () => { actionBtn.classList.remove('pressed'); };
+        actionBtn.addEventListener("touchstart", actionOn, { passive: false });
+        actionBtn.addEventListener("touchend", actionOff, { passive: true });
+        actionBtn.addEventListener("touchcancel", actionOff, { passive: true });
+        actionBtn.addEventListener("mousedown", () => { actionBtn.classList.add('pressed'); ejecutarGolpeA(); });
+        actionBtn.addEventListener("mouseup", actionOff);
+        actionBtn.addEventListener("mouseleave", actionOff);
+
+        const interactBtn = document.getElementById("interactBtn");
+        const interactOn = (e) => { e.preventDefault(); interactBtn.classList.add('pressed'); toggleWorktable(); };
+        const interactOff = () => { interactBtn.classList.remove('pressed'); };
+        interactBtn.addEventListener("touchstart", interactOn, { passive: false });
+        interactBtn.addEventListener("touchend", interactOff, { passive: true });
+        interactBtn.addEventListener("touchcancel", interactOff, { passive: true });
+        interactBtn.addEventListener("mousedown", () => { interactBtn.classList.add('pressed'); toggleWorktable(); });
+        interactBtn.addEventListener("mouseup", interactOff);
+        interactBtn.addEventListener("mouseleave", interactOff);
+
+        function ejecutarGolpeA() {
+            if (gameState !== 'PLAYING') return;
+            let ahora = Date.now();
+            if (ahora - ultimoGolpeTiempo < 180) return;
+            ultimoGolpeTiempo = ahora;
+
+            let pX = player.x + player.size / 2;
+            let pY = player.y + player.size / 2;
+
+            let mesaCercana = null, menorDistMesa = 65, idxMesa = -1;
+            for (let i = 0; i < mesasEnMundo.length; i++) {
+                let m = mesasEnMundo[i];
+                let dist = Math.hypot(pX - (m.x + 12.5), pY - (m.y + 12.5));
+                if (dist < menorDistMesa) { menorDistMesa = dist; mesaCercana = m; idxMesa = i; }
+            }
+
+            if (mesaCercana) {
+                let danioMesa = 1;
+                let itemMano = hotbar[slotActivo];
+                if (itemMano && itemMano.item === 'acha' && itemMano.cantidad > 0) {
+                    danioMesa = Math.ceil(8 / 8); 
+                }
+                mesaCercana.hp -= danioMesa;
+                if (mesaCercana.hp <= 0) {
+                    devolverGridAlInventario(worktableGrid);
+                    agregarAlInventario('mesa_trabajo', 1);
+                    mesasEnMundo.splice(idxMesa, 1);
+                }
+                return;
+            }
+
+            let arbolesVisibles = getArbolesCercanos();
+            let arbolMasCercano = null, menorDistancia = 70;
+            for (let a of arbolesVisibles) {
+                let distancia = Math.hypot((player.x + player.size/2) - (a.x + a.width/2), (player.y + player.size/2) - (a.y + a.height/2));
+                if (distancia < menorDistancia) { menorDistancia = distancia; arbolMasCercano = a; }
+            }
+
+            if (arbolMasCercano) {
+                let a = arbolMasCercano;
+                if (arbolesAnimaciones[a.key] && arbolesAnimaciones[a.key].breaking) return;
+
+                let danioGolpe = 1;
+                let itemMano = hotbar[slotActivo];
+                if (itemMano && itemMano.item === 'acha' && itemMano.cantidad > 0) {
+                    danioGolpe = Math.ceil(15 / 8);
+                }
+
+                arbolesEstado[a.key] -= danioGolpe;
+                arbolesAnimaciones[a.key] = { shake: 12, breaking: false };
+
+                if (arbolesEstado[a.key] <= 0) {
+                    arbolesAnimaciones[a.key] = { shake: 0, breaking: true, breakTimer: 15 };
+                    setTimeout(() => {
+                        if (!arbolesDestruidos.has(a.key)) {
+                            arbolesDestruidos.add(a.key);
+                            itemsEnSuelo.push({ id: Date.now() + Math.random(), item: 'tronco', cantidad: 2, x: a.x + a.width / 2 - 12, y: a.y + a.height - 25 });
+                        }
+                    }, 250);
+                }
+            }
+        }
+
+        function devolverItemAlInventario(itemNombre, cantidad, forzarNuevoSlot = false) {
+            if (!itemNombre || cantidad <= 0) return;
+            let maxStack = getMaxStack(itemNombre);
+
+            if (!forzarNuevoSlot) {
+                for (let i = 0; i < hotbar.length; i++) {
+                    if (hotbar[i].item === itemNombre && hotbar[i].cantidad < maxStack) {
+                        let espacio = maxStack - hotbar[i].cantidad;
+                        let aSumar = Math.min(espacio, cantidad);
+                        hotbar[i].cantidad += aSumar; cantidad -= aSumar;
+                        if (cantidad <= 0) return;
+                    }
+                }
+                for (let i = 0; i < inventarioStorage.length; i++) {
+                    if (inventarioStorage[i].item === itemNombre && inventarioStorage[i].cantidad < maxStack) {
+                        let espacio = maxStack - inventarioStorage[i].cantidad;
+                        let aSumar = Math.min(espacio, cantidad);
+                        inventarioStorage[i].cantidad += aSumar; cantidad -= aSumar;
+                        if (cantidad <= 0) return;
+                    }
+                }
+            }
+
+            for (let i = 0; i < inventarioStorage.length; i++) {
+                if (inventarioStorage[i].item === null || inventarioStorage[i].cantidad <= 0) {
+                    let aSumar = Math.min(maxStack, cantidad);
+                    inventarioStorage[i] = { item: itemNombre, cantidad: aSumar }; cantidad -= aSumar;
+                    if (cantidad <= 0) return;
+                }
+            }
+            for (let i = 0; i < hotbar.length; i++) {
+                if (hotbar[i].item === null || hotbar[i].cantidad <= 0) {
+                    let aSumar = Math.min(maxStack, cantidad);
+                    hotbar[i] = { item: itemNombre, cantidad: aSumar }; cantidad -= aSumar;
+                    if (cantidad <= 0) return;
+                }
+            }
+
+            if (cantidad > 0) itemsEnSuelo.push({ id: Date.now() + Math.random(), item: itemNombre, cantidad: cantidad, x: player.x, y: player.y });
+        }
+
+        function devolverGridAlInventario(grid) {
+            for (let i = 0; i < grid.length; i++) {
+                if (grid[i].item !== null && grid[i].cantidad > 0) {
+                    devolverItemAlInventario(grid[i].item, grid[i].cantidad);
+                    grid[i] = { item: null, cantidad: 0 };
+                }
+            }
+        }
+
+        function rescatarItemCursor() {
+            if (itemSeleccionado !== null) {
+                let itemNombre = null, itemCantidad = 0;
+                if (itemSeleccionado.item !== undefined && itemSeleccionado.tipo === undefined) {
+                    itemNombre = itemSeleccionado.item; itemCantidad = itemSeleccionado.cantidad;
+                } else if (itemSeleccionado.tipo !== undefined) {
+                    let arr;
+                    if (itemSeleccionado.tipo === 'storage') arr = inventarioStorage;
+                    else if (itemSeleccionado.tipo === 'hotbar') arr = hotbar;
+                    else if (itemSeleccionado.tipo === 'craft') arr = craftingGrid;
+                    else if (itemSeleccionado.tipo === 'wt') arr = worktableGrid;
+
+                    let slotObj = arr ? arr[itemSeleccionado.index] : null;
+                    if (slotObj && slotObj.item) {
+                        itemNombre = slotObj.item; itemCantidad = slotObj.cantidad;
+                        arr[itemSeleccionado.index] = { item: null, cantidad: 0 };
+                    }
+                }
+                if (itemNombre && itemCantidad > 0) devolverItemAlInventario(itemNombre, itemCantidad);
+                itemSeleccionado = null;
+            }
+        }
+
+        function agregarAlInventario(itemNombre, cantidad) {
+            devolverItemAlInventario(itemNombre, cantidad);
+            actualizarInventariosVisuales();
+        }
+
+        let ultimoToqueSlot = { tipo: null, index: -1, tiempo: 0 };
+
+        function manejarClickSlot(tipo, index) {
+            let inventarioActual;
+            if (tipo === 'storage') inventarioActual = inventarioStorage;
+            else if (tipo === 'hotbar') inventarioActual = hotbar;
+            else if (tipo === 'craft') inventarioActual = craftingGrid;
+            else if (tipo === 'wt') inventarioActual = worktableGrid;
+            else return;
+
+            let slotObj = inventarioActual[index];
+            let ahora = Date.now();
+
+            if (ultimoToqueSlot.tipo === tipo && ultimoToqueSlot.index === index && (ahora - ultimoToqueSlot.tiempo) < 500) {
+                if (slotObj.item !== null && itemSeleccionado === null) {
+                    unirTodosLosItemsEnSlotDestino(tipo, index, slotObj.item);
+                    ultimoToqueSlot = { tipo: null, index: -1, tiempo: 0 };
+                    actualizarInventariosVisuales();
+                    return;
+                }
+            }
+            ultimoToqueSlot = { tipo, index, tiempo: ahora };
+
+            if (itemSeleccionado === null) {
+                if (slotObj.item !== null) { itemSeleccionado = { tipo, index }; actualizarInventariosVisuales(); }
+            } else {
+                if (itemSeleccionado.item !== undefined && itemSeleccionado.tipo === undefined) {
+                    let destinoItem = inventarioActual[index];
+                    let maxStack = getMaxStack(itemSeleccionado.item);
+
+                    if (destinoItem.item === null) {
+                        let aPoner = Math.min(maxStack, itemSeleccionado.cantidad);
+                        inventarioActual[index] = { item: itemSeleccionado.item, cantidad: aPoner };
+                        itemSeleccionado.cantidad -= aPoner;
+                        if (itemSeleccionado.cantidad <= 0) itemSeleccionado = null;
+                    } else if (destinoItem.item === itemSeleccionado.item && maxStack > 1) {
+                        let espacio = maxStack - destinoItem.cantidad;
+                        let aSumar = Math.min(espacio, itemSeleccionado.cantidad);
+                        destinoItem.cantidad += aSumar;
+                        itemSeleccionado.cantidad -= aSumar;
+                        if (itemSeleccionado.cantidad <= 0) itemSeleccionado = null;
+                    } else {
+                        let temp = { ...destinoItem };
+                        inventarioActual[index] = { item: itemSeleccionado.item, cantidad: itemSeleccionado.cantidad };
+                        itemSeleccionado = { item: temp.item, cantidad: temp.cantidad };
+                    }
+                } else {
+                    let origenArray;
+                    if (itemSeleccionado.tipo === 'storage') origenArray = inventarioStorage;
+                    else if (itemSeleccionado.tipo === 'hotbar') origenArray = hotbar;
+                    else if (itemSeleccionado.tipo === 'craft') origenArray = craftingGrid;
+                    else if (itemSeleccionado.tipo === 'wt') origenArray = worktableGrid;
+
+                    let origenIndex = itemSeleccionado.index;
+                    if (itemSeleccionado.tipo === tipo && origenIndex === index) {
+                        itemSeleccionado = null; actualizarInventariosVisuales(); return;
+                    }
+
+                    let origenItem = origenArray[origenIndex];
+                    let destinoItem = inventarioActual[index];
+                    let maxStack = getMaxStack(origenItem.item);
+
+                    if (destinoItem.item === origenItem.item && destinoItem.item !== null && maxStack > 1) {
+                        let espacio = maxStack - destinoItem.cantidad;
+                        let aSumar = Math.min(espacio, origenItem.cantidad);
+                        destinoItem.cantidad += aSumar; origenItem.cantidad -= aSumar;
+                        if (origenItem.cantidad <= 0) origenArray[origenIndex] = { item: null, cantidad: 0 };
+                    } else {
+                        let temp = { ...origenItem };
+                        origenArray[origenIndex] = { ...destinoItem };
+                        inventarioActual[index] = temp;
+                    }
+                    itemSeleccionado = null;
+                }
+                actualizarInventariosVisuales();
+            }
+        }
+
+        function unirTodosLosItemsEnSlotDestino(tipoDestino, indexDestino, itemNombre) {
+            let maxStack = getMaxStack(itemNombre);
+            if (maxStack === 1) return;
+
+            let invDest;
+            if (tipoDestino === 'storage') invDest = inventarioStorage;
+            else if (tipoDestino === 'hotbar') invDest = hotbar;
+            else if (tipoDestino === 'craft') invDest = craftingGrid;
+            else if (tipoDestino === 'wt') invDest = worktableGrid;
+
+            let slotDest = invDest[indexDestino];
+            let cantidadAcumulada = slotDest.cantidad;
+            slotDest.item = null; slotDest.cantidad = 0;
+
+            let todasLasGrids = [hotbar, inventarioStorage, craftingGrid, worktableGrid];
+            todasLasGrids.forEach(g => {
+                g.forEach(s => {
+                    if (s.item === itemNombre) { cantidadAcumulada += s.cantidad; s.item = null; s.cantidad = 0; }
+                });
+            });
+
+            slotDest.item = itemNombre;
+            let aPoner = Math.min(maxStack, cantidadAcumulada);
+            slotDest.cantidad = aPoner;
+            cantidadAcumulada -= aPoner;
+            if (cantidadAcumulada > 0) devolverItemAlInventario(itemNombre, cantidadAcumulada);
+        }
+
+        function handleSlotDown(tipo, index) {
+            isHolding = true;
+            pressTimer = setTimeout(() => {
+                if (isHolding) { pressTimer = null; abrirCustomSplitModal(tipo, index); }
+            }, 1000);
+        }
+
+        function handleSlotUp(tipo, index) {
+            isHolding = false;
+            if (pressTimer) { clearTimeout(pressTimer); pressTimer = null; }
+            let modalInv = document.getElementById('invModal').style.display === 'flex';
+            let modalWt = document.getElementById('worktableModal').style.display === 'flex';
+            if (tipo === 'hotbar' && !modalInv && !modalWt) seleccionarSlot(index);
+            manejarClickSlot(tipo, index);
+        }
+
+        function setModificadorDiv(num, btnId) {
+            multiplicadorSlots = num;
+            ['btnDiv2', 'btnDiv3', 'btnDivX2', 'btnDivX3'].forEach(id => {
+                let b = document.getElementById(id);
+                if (b) b.classList.remove('active');
+            });
+            let bSel = document.getElementById(btnId);
+            if (bSel) bSel.classList.add('active');
+        }
+
+        function abrirCustomSplitModal(tipo, index) {
+            splitTarget = { tipo, index };
+            let inv;
+            if (tipo === 'storage') inv = inventarioStorage;
+            else if (tipo === 'hotbar') inv = hotbar;
+            else if (tipo === 'craft') inv = craftingGrid;
+            else if (tipo === 'wt') inv = worktableGrid;
+
+            let slot = inv ? inv[index] : null;
+            if (!slot || slot.cantidad <= 1 || getMaxStack(slot.item) === 1) return;
+
+            setModificadorDiv(1, 'btnDiv2');
+            const inputNum = document.getElementById('splitInputNumber');
+            inputNum.value = Math.floor(slot.cantidad / 2);
+            document.getElementById('customSplitModal').style.display = 'flex';
+            setTimeout(() => { inputNum.focus(); inputNum.select(); }, 100);
+        }
+
+        function cerrarCustomSplitModal() {
+            document.getElementById('customSplitModal').style.display = 'none';
+            splitTarget = null;
+        }
+
+        function confirmarCustomSplit() {
+            if (!splitTarget) return;
+            const inputNum = document.getElementById('splitInputNumber');
+            let porcionDeseada = parseInt(inputNum.value);
+
+            let inv;
+            if (splitTarget.tipo === 'storage') inv = inventarioStorage;
+            else if (splitTarget.tipo === 'hotbar') inv = hotbar;
+            else if (splitTarget.tipo === 'craft') inv = craftingGrid;
+            else if (splitTarget.tipo === 'wt') inv = worktableGrid;
+
+            let slot = inv ? inv[splitTarget.index] : null;
+            if (!slot) return;
+
+            let totalARetirar = porcionDeseada * multiplicadorSlots;
+
+            if (isNaN(porcionDeseada) || porcionDeseada <= 0 || totalARetirar > slot.cantidad) {
+                alert(`No tienes suficiente cantidad en el slot para crear ${multiplicadorSlots} pilas de ${porcionDeseada} (Requiere ${totalARetirar}).`);
+                return;
+            }
+
+            slot.cantidad -= totalARetirar;
+            let itemNombre = slot.item;
+            if (slot.cantidad <= 0) { slot.item = null; slot.cantidad = 0; }
+
+            cerrarCustomSplitModal();
+            // Colocar cada una de las divisiones en slots libres e independientes
+            for (let k = 0; k < multiplicadorSlots; k++) {
+                devolverItemAlInventario(itemNombre, porcionDeseada, true);
+            }
+            actualizarInventariosVisuales();
+        }
+
+        function seleccionarCategoria(cat, ventana) {
+            if (ventana === 'inv') categoriaActivaInv = cat;
+            else categoriaActivaWt = cat;
+            actualizarInventariosVisuales();
+        }
+
+        function renderizarRecetasRapidas(containerId, ventana) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            container.innerHTML = '';
+
+            let cat = (ventana === 'inv') ? categoriaActivaInv : categoriaActivaWt;
+            let recetasDisponibles = [];
+
+            if (cat === 'todos' || cat === 'madera' || cat === 'tools') {
+                recetasDisponibles.push({ resultado: 'madera_procesada', cantidad: 3, nombre: '3x Madera' });
+                recetasDisponibles.push({ resultado: 'palo', cantidad: 4, nombre: '4x Palo' });
+                recetasDisponibles.push({ resultado: 'mesa_trabajo', cantidad: 1, nombre: 'Mesa de Trabajo' });
+                if (ventana === 'wt') {
+                    recetasDisponibles.push({ resultado: 'acha', cantidad: 1, nombre: 'Hacha de Madera' });
+                }
+            }
+
+            if (recetasDisponibles.length === 0) {
+                container.innerHTML = `<div style="font-size: 8px; color: #333; text-align: center; padding: 10px;">No hay recetas en esta categoría.</div>`;
+                return;
+            }
+
+            recetasDisponibles.forEach(receta => {
+                let row = document.createElement('div');
+                row.className = 'recipe-item-row';
+                row.onclick = () => craftearRecetaRapida(receta);
+                row.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 4px;">
+                        <img src="${TEXTURAS_EMBEBIDAS[receta.resultado] || ""}">
+                        <span style="font-size: 8px; font-weight: bold; color: #222;">${receta.nombre}</span>
+                    </div>
+                    <span style="font-size: 8px; font-weight: bold; color: #005500;">➔ Craftear</span>
+                `;
+                container.appendChild(row);
+            });
+        }
+
+        function craftearRecetaRapida(receta) {
+            if (receta.resultado === 'madera_procesada') {
+                let encontrado = false;
+                for (let i = 0; i < inventarioStorage.length; i++) {
+                    if (esMaderaEnBruto(inventarioStorage[i].item) && inventarioStorage[i].cantidad > 0) {
+                        inventarioStorage[i].cantidad--;
+                        if (inventarioStorage[i].cantidad <= 0) inventarioStorage[i] = { item: null, cantidad: 0 };
+                        encontrado = true; break;
+                    }
+                }
+                if (!encontrado) {
+                    for (let i = 0; i < hotbar.length; i++) {
+                        if (esMaderaEnBruto(hotbar[i].item) && hotbar[i].cantidad > 0) {
+                            hotbar[i].cantidad--;
+                            if (hotbar[i].cantidad <= 0) hotbar[i] = { item: null, cantidad: 0 };
+                            encontrado = true; break;
+                        }
+                    }
+                }
+                if (encontrado) agregarAlInventario('madera_procesada', receta.cantidad);
+                else alert("No tienes troncos para craftear madera.");
+            } else if (receta.resultado === 'palo') {
+                let encontrado = false;
+                for (let i = 0; i < inventarioStorage.length; i++) {
+                    if (inventarioStorage[i].item === 'madera_procesada' && inventarioStorage[i].cantidad > 0) {
+                        inventarioStorage[i].cantidad--;
+                        if (inventarioStorage[i].cantidad <= 0) inventarioStorage[i] = { item: null, cantidad: 0 };
+                        encontrado = true; break;
+                    }
+                }
+                if (!encontrado) {
+                    for (let i = 0; i < hotbar.length; i++) {
+                        if (hotbar[i].item === 'madera_procesada' && hotbar[i].cantidad > 0) {
+                            hotbar[i].cantidad--;
+                            if (hotbar[i].cantidad <= 0) hotbar[i] = { item: null, cantidad: 0 };
+                            encontrado = true; break;
+                        }
+                    }
+                }
+                if (encontrado) agregarAlInventario('palo', 4);
+                else alert("Necesitas madera procesada para hacer palos.");
+            } else if (receta.resultado === 'mesa_trabajo') {
+                let maderasNecesarias = 4, encontradas = 0, slotsAfectados = [];
+                for (let i = 0; i < inventarioStorage.length && encontradas < maderasNecesarias; i++) {
+                    if (inventarioStorage[i].item === 'madera_procesada') {
+                        let tomar = Math.min(maderasNecesarias - encontradas, inventarioStorage[i].cantidad);
+                        encontradas += tomar; slotsAfectados.push({ tipo: 'storage', index: i, cantidad: tomar });
+                    }
+                }
+                for (let i = 0; i < hotbar.length && encontradas < maderasNecesarias; i++) {
+                    if (hotbar[i].item === 'madera_procesada') {
+                        let tomar = Math.min(maderasNecesarias - encontradas, hotbar[i].cantidad);
+                        encontradas += tomar; slotsAfectados.push({ tipo: 'hotbar', index: i, cantidad: tomar });
+                    }
+                }
+                if (encontradas >= 4) {
+                    slotsAfectados.forEach(s => {
+                        let arr = (s.tipo === 'storage') ? inventarioStorage : hotbar;
+                        arr[s.index].cantidad -= s.cantidad;
+                        if (arr[s.index].cantidad <= 0) arr[s.index] = { item: null, cantidad: 0 };
+                    });
+                    agregarAlInventario('mesa_trabajo', 1);
+                } else alert("Necesitas 4 maderas procesadas para hacer una mesa.");
+            } else if (receta.resultado === 'acha') {
+                let mReq = 3, pReq = 2;
+                let mEncontradas = 0, pEncontrados = 0;
+                let afectadosM = [], afectadosP = [];
+
+                for (let i = 0; i < inventarioStorage.length && mEncontradas < mReq; i++) {
+                    if (inventarioStorage[i].item === 'madera_procesada') {
+                        let t = Math.min(mReq - mEncontradas, inventarioStorage[i].cantidad);
+                        mEncontradas += t; afectadosM.push({arr: inventarioStorage, idx: i, cant: t});
+                    }
+                }
+                for (let i = 0; i < hotbar.length && mEncontradas < mReq; i++) {
+                    if (hotbar[i].item === 'madera_procesada') {
+                        let t = Math.min(mReq - mEncontradas, hotbar[i].cantidad);
+                        mEncontradas += t; afectadosM.push({arr: hotbar, idx: i, cant: t});
+                    }
+                }
+
+                for (let i = 0; i < inventarioStorage.length && pEncontrados < pReq; i++) {
+                    if (inventarioStorage[i].item === 'palo') {
+                        let t = Math.min(pReq - pEncontrados, inventarioStorage[i].cantidad);
+                        pEncontrados += t; afectadosP.push({arr: inventarioStorage, idx: i, cant: t});
+                    }
+                }
+                for (let i = 0; i < hotbar.length && pEncontrados < pReq; i++) {
+                    if (hotbar[i].item === 'palo') {
+                        let t = Math.min(pReq - pEncontrados, hotbar[i].cantidad);
+                        pEncontrados += t; afectadosP.push({arr: hotbar, idx: i, cant: t});
+                    }
+                }
+
+                if (mEncontradas >= 3 && pEncontrados >= 2) {
+                    afectadosM.forEach(item => {
+                        item.arr[item.idx].cantidad -= item.cant;
+                        if (item.arr[item.idx].cantidad <= 0) item.arr[item.idx] = { item: null, cantidad: 0 };
+                    });
+                    afectadosP.forEach(item => {
+                        item.arr[item.idx].cantidad -= item.cant;
+                        if (item.arr[item.idx].cantidad <= 0) item.arr[item.idx] = { item: null, cantidad: 0 };
+                    });
+                    agregarAlInventario('acha', 1);
+                } else {
+                    alert("Necesitas 3 maderas procesadas y 2 palos para fabricar un hacha.");
+                }
+            }
+            actualizarInventariosVisuales();
+        }
+
+        function evaluarGridExacto(gridSlots, anchoGrid) {
+            let ancho = anchoGrid;
+            let alto = gridSlots.length / ancho;
+
+            // 0. Crafteo de Madera Procesada en Cuadrícula (1 tronco = 3 madera_procesada)
+            for (let i = 0; i < gridSlots.length; i++) {
+                if (esMaderaEnBruto(gridSlots[i].item) && gridSlots[i].cantidad > 0) {
+                    let limpio = true;
+                    for (let j = 0; j < gridSlots.length; j++) {
+                        if (j !== i && gridSlots[j].item !== null) { limpio = false; break; }
+                    }
+                    if (limpio) {
+                        return { item: 'madera_procesada', cantidadPorCraft: 3, maxCrafts: gridSlots[i].cantidad, tipoGrid: 'madera_suelta', indices: [i] };
+                    }
+                }
+            }
+
+            // 1. Crafteo de Palos (1 madera vertical = 4 palos)
+            for (let r = 0; r <= alto - 2; r++) {
+                for (let c = 0; c < ancho; c++) {
+                    let idxArriba = r * ancho + c;
+                    let idxAbajo = (r + 1) * ancho + c;
+                    let sArriba = gridSlots[idxArriba];
+                    let sAbajo = gridSlots[idxAbajo];
+
+
+=== FIN PARTE 3 DE 4 ===
